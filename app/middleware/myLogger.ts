@@ -1,6 +1,6 @@
-import { Context, Application } from 'egg';
+import { Context, Application, EggAppConfig } from 'egg';
 import { appendFileSync } from 'fs';
-export default (options: any, app: Application) => {
+export default (options: EggAppConfig['myLogger'], app: Application) => {
   return async (ctx: Context, next: () => Promise<any>) => {
     console.log('options', options);
     console.log('default options', app.config.logger);
@@ -9,9 +9,8 @@ export default (options: any, app: Application) => {
     await next();
     const ms = Date.now() - startTime;
     const logTime = `${requestTime} -- ${ctx.method} -- ${ctx.url} -- ${ms}ms`;
-    // if (options.allowedMethod.includes(ctx.method)) {
-    //   appendFileSync('./log.txt', logTime + '\n');
-    // }
-    appendFileSync('./log.txt', logTime + '\n');
+    if (options.allowedMethod.includes(ctx.method)) {
+      appendFileSync('./log.txt', logTime + '\n');
+    }
   };
 };
