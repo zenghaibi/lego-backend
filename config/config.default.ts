@@ -23,17 +23,21 @@ export default (appInfo: EggAppInfo) => {
   config.view = {
     defaultViewEngine: 'nunjucks',
   };
+  // 配置自定义插件
+  config.mongoose = {
+    url: 'mongodb://localhost:27017/hello',
+  };
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: {
-      allowedMethod: ['POST'],
+      allowedMethod: [ 'POST' ],
     },
     baseUrl: 'default.url',
     // 配置mongoose的连接地址
-    mongoose: {
-      url: 'mongodb://localhost:27017/hello',
-    },
+    // mongoose: {
+    //   url: 'mongodb://localhost:27017/hello',
+    // },
   };
 
   // the return config will combines to EggAppConfig

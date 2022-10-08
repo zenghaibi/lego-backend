@@ -1,19 +1,19 @@
 import { IBoot, Application } from 'egg';
-import { createConnection } from 'mongoose';
-import { join } from 'path';
-import * as assert from 'assert';
+// import { createConnection } from 'mongoose';
+// import { join } from 'path';
+// import * as assert from 'assert';
 
 export default class AppBoot implements IBoot {
   private readonly app: Application;
   constructor(app: Application) {
     this.app = app;
-    const { url } = this.app.config.mongoose;
-    assert.default(url, '[egg-mongoose] url is required on config');
-    const db = createConnection(url);
-    db.on('connected', () => {
-      app.logger.info(`[egg-mongoose] ${url} connected successfully`);
-    });
-    app.mongoose = db;
+    // const { url } = this.app.config.mongoose;
+    // assert.default(url, '[egg-mongoose] url is required on config');
+    // const db = createConnection(url);
+    // db.on('connected', () => {
+    //   app.logger.info(`[egg-mongoose] ${url} connected successfully`);
+    // });
+    // app.mongoose = db;
   }
   // 配置文件即将加载，这是最后动态修改配置的时机（configWillLoad）同步
   configWillLoad(): void {
@@ -27,10 +27,10 @@ export default class AppBoot implements IBoot {
   async willReady() {
     console.log('enable willready', this.app.config.coreMiddleware);
     // app/model/user.ts => app.model.User
-    const dir = join(this.app.config.baseDir, 'app/model');
-    this.app.loader.loadToApp(dir, 'model', {
-      caseStyle: 'upper',
-    });
+    // const dir = join(this.app.config.baseDir, 'app/model');
+    // this.app.loader.loadToApp(dir, 'model', {
+    //   caseStyle: 'upper',
+    // });
   }
   // 应用已经启动完毕（didReady）异步
   async didReady(): Promise<void> {

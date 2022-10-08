@@ -12,6 +12,11 @@ const plugin: EggPlugin = {
     enable: true,
     package: 'egg-view-nunjucks',
   },
+  // 启用自定义插件
+  hello: {
+    enable: true,
+    package: 'egg-hbzeng',
+  },
 };
 
 export default plugin;
