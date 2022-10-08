@@ -21,3 +21,5 @@ Wed Oct 05 2022 17:33:35 GMT+0800 (中国标准时间) -- GET -- /dog -- 1172ms
 Wed Oct 05 2022 22:05:34 GMT+0800 (中国标准时间) -- GET -- /dog -- 2739ms
 Thu Oct 06 2022 04:27:39 GMT+0800 (中国标准时间) -- POST -- /test/2?title=kevin -- 1543ms
 Thu Oct 06 2022 04:28:36 GMT+0800 (中国标准时间) -- POST -- /test/2?title=H.Bzeng -- 1237ms
+Sat Oct 08 2022 21:08:00 GMT+0800 (中国标准时间) -- GET -- /dog -- 1623ms
+Sat Oct 08 2022 21:08:02 GMT+0800 (中国标准时间) -- GET -- /dog/ -- 1061ms

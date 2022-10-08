@@ -14,4 +14,9 @@ export default class DogService extends Service {
     );
     return resp.data;
   }
+
+  async showPlayers() {
+    const result = await this.app.model.User.find({ age: { $lt: 40 } }).exec();
+    return result;
+  }
 }
