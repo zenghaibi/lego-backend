@@ -15,6 +15,10 @@ export default (appInfo: EggAppInfo) => {
       enable: false,
     },
   };
+  // 配置debug调试等级
+  config.logger = {
+    consoleLevel: 'DEBUG',
+  };
   // 配置模板引擎插件
   config.view = {
     defaultViewEngine: 'nunjucks',

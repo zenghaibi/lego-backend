@@ -7,7 +7,11 @@ export default class TestController extends Controller {
     const { query, body } = ctx.request;
     const { baseUrl } = ctx.app.config;
     const res = await this.app.axiosInstance.get('/api/breeds/image/random');
-    console.log('axios', res.data);
+    // console.log('axios', res.data);
+    ctx.logger.debug('new debug info');
+    ctx.logger.info('new res data', res.data);
+    ctx.logger.warn('new warnning');
+    ctx.logger.error(new Error('whoops'));
     const resp = {
       query,
       id,
