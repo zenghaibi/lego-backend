@@ -1,3 +1,6 @@
+### 定义UserModel
+
+```
 import { Application } from 'egg';
 import { Schema } from 'mongoose';
 
@@ -28,3 +31,5 @@ function initUserModel(app: Application) {
 }
 
 export default initUserModel;
+
+```

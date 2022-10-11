@@ -25,7 +25,7 @@ export default (appInfo: EggAppInfo) => {
   };
   // 配置自定义插件
   config.mongoose = {
-    url: 'mongodb://localhost:27017/hello',
+    url: 'mongodb://localhost:27017/lego',
   };
   // add your special config in here
   const bizConfig = {
