@@ -24,7 +24,8 @@ function initUserModel(app: Application) {
     },
     { timestamps: true },
   );
-  return app.mongoose.model<UserProps>('User', UserSchema);
+  // return app.mongoose.model<UserProps>('User', UserSchema);
+  return app.mongoose.models.User || app.mongoose.model<UserProps>('User', UserSchema);
 }
 
 export default initUserModel;
