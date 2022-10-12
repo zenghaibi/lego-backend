@@ -16,6 +16,11 @@ const plugin: EggPlugin = {
     enable: true,
     package: 'egg-validate',
   },
+  // 启动egg-bcrypt 加密插件
+  bcrypt: {
+    enable: true,
+    package: 'egg-bcrypt',
+  },
 };
 
 export default plugin;

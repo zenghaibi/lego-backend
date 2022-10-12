@@ -5,9 +5,10 @@ export default class UserService extends Service {
   public async createByEmail(playload: UserProps) {
     const { ctx } = this;
     const { username, password } = playload;
+    const hash = await ctx.genHash(password);
     const userCreateData: Partial<UserProps> = {
       username,
-      password,
+      password: hash,
       email: username,
     };
     return ctx.model.User.create(userCreateData);
