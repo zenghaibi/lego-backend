@@ -1,0 +1,84 @@
+## 添加数据验证
+** 命名用egg-validate插件 **
+
+项目地址: https://github.com/eggjs/egg-validate
+
+** validate 内部命名用了 parameter 这个库来完成验证 **
+项目地址： https://github.com/node-modules/parameter 
+它是专门验证参数所建立的。项献者大部是egg.js的作者
+
+对应的规则文档地址: https://github.com/node-modules/parameter/#reule
+
+```javascript
+// 简单写法
+const rule = {
+  name: 'string',
+  age: 'int'.
+  gender: ['male','female','unknown']
+}
+// 复杂写法
+const rule = {
+  name: {type: 'string', required: true},
+  age: {type: 'int', required: true},
+  gender: {type: 'enum', values: ['male', 'female', 'unknown']}
+}
+```
+
+示列代码：
+
+
+
+import { Controller } from 'egg';
+const userCreateRules = {
+  username: 'email',
+  password: { type: 'password', min: 8 },
+};
+
+export default class UserController extends Controller {
+  async createByEmail() {
+    const { ctx, service, app } = this;
+    // ctx.validate(userCreateRules);
+    const errors = app.validator.validate(userCreateRules, ctx.request.body);
+    ctx.logger.warn(errors);
+    if (errors) {
+      return ctx.helper.error({ ctx, errno: 10001, msg: '验证错误' });
+    }
+    const userData = await service.user.createByEmail(ctx.request.body);
+    ctx.helper.success({ ctx, res: userData });
+  }
+  async show() {
+    const { ctx, service } = this;
+    // /users/:id
+    const userData = await service.user.findById(ctx.params.id);
+    ctx.helper.success({ ctx, res: userData });
+  }
+}
+
+import { Context } from 'egg';
+interface RespType {
+  ctx: Context;
+  res?: any;
+  msg?: string;
+}
+interface ErrorRespType {
+  ctx: Context;
+  errno: number;
+  msg?: string;
+}
+export default {
+  success({ ctx, res, msg }: RespType) {
+    ctx.body = {
+      error: 0,
+      data: res ? res : null,
+      message: msg ? msg : '请求成功',
+    };
+    ctx.status = 200;
+  },
+  error({ ctx, msg, errno }: ErrorRespType) {
+    ctx.body = {
+      errno,
+      message: msg ? msg : '请求错误',
+    };
+    ctx.status = 200;
+  },
+};
