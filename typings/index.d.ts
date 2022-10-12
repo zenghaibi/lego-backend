@@ -1,12 +1,8 @@
 import 'egg';
-import mongoose, { Connection, Model } from 'mongoose';
+import { Connection, Model } from 'mongoose';
 
 declare module 'egg' {
-  type MongooseModel = {
+  interface MongooseModels extends IModel {
     [key: string]: Model<any>;
-  };
-  interface Application {
-    mongoose: Connection;
-    model: MongooseModel;
   }
 }
