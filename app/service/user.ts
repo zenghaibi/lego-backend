@@ -19,4 +19,7 @@ export default class UserService extends Service {
     }
     return result;
   }
+  async findByUsername(username: string) {
+    return await this.ctx.model.User.findOne({ username });
+  }
 }

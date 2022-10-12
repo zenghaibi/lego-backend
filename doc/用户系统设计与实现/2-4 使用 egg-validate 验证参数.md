@@ -1,10 +1,11 @@
 ## 添加数据验证
+
 ** 命名用egg-validate插件 **
 
 项目地址: https://github.com/eggjs/egg-validate
 
 ** validate 内部命名用了 parameter 这个库来完成验证 **
-项目地址： https://github.com/node-modules/parameter 
+项目地址： https://github.com/node-modules/parameter
 它是专门验证参数所建立的。项献者大部是egg.js的作者
 
 对应的规则文档地址: https://github.com/node-modules/parameter/#reule
@@ -25,9 +26,7 @@ const rule = {
 ```
 
 示列代码：
-
-
-
+``` javascript
 import { Controller } from 'egg';
 const userCreateRules = {
   username: 'email',
@@ -82,3 +81,4 @@ export default {
     ctx.status = 200;
   },
 };
+```
