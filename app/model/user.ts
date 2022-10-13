@@ -1,6 +1,6 @@
 import { Application } from 'egg';
 import { Schema } from 'mongoose';
-
+import AutoIncrementFactory from 'mongoose-sequence';
 export interface UserProps {
   username: string;
   password: string;
@@ -8,18 +8,18 @@ export interface UserProps {
   nickName?: string;
   picture?: string;
   phoneNumber?: string;
-  createAt: Date;
-  updateAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 function initUserModel(app: Application) {
-  const UserSchema = new Schema<UserProps>(
+  const AutoIncrement = AutoIncrementFactory(app.mongoose);
+  const userSchema = new Schema<UserProps>(
     {
       username: { type: String, unique: true, required: true },
       password: { type: String, required: true },
       nickName: { type: String },
       picture: { type: String },
-      email: { type: String },
       phoneNumber: { type: String },
     },
     {
@@ -32,7 +32,8 @@ function initUserModel(app: Application) {
       },
     },
   );
-  return app.mongoose.model<UserProps>('User', UserSchema);
+  userSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'users_id_counter' });
+  return app.mongoose.model<UserProps>('User', userSchema);
 }
 
 export default initUserModel;
