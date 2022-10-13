@@ -61,7 +61,9 @@ export default class UserController extends Controller {
     if (!verifyPwd) {
       return ctx.helper.error({ ctx, errorType: 'loginCheckFailInfo' });
     }
-    ctx.helper.success({ ctx, res: user, msg: '登录成功' });
+    // const userObj = user.toJSON() as any;
+    // delete userObj.password;
+    ctx.helper.success({ ctx, res: user.toJSON(), msg: '登录成功' });
   }
   async show() {
     const { ctx, service } = this;
