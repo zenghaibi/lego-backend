@@ -63,12 +63,16 @@ export default class UserController extends Controller {
     }
     // const userObj = user.toJSON() as any;
     // delete userObj.password;
+
+    // cookie 使用
+    ctx.cookies.set('username', user.username, { encrypt: true });
     ctx.helper.success({ ctx, res: user.toJSON(), msg: '登录成功' });
   }
   async show() {
-    const { ctx, service } = this;
+    const { ctx } = this;
     // /users/:id
-    const userData = await service.user.findById(ctx.params.id);
-    ctx.helper.success({ ctx, res: userData });
+    // const userData = await service.user.findById(ctx.params.id);
+    const username = ctx.cookies.get('username', { encrypt: true });
+    ctx.helper.success({ ctx, res: username });
   }
 }
