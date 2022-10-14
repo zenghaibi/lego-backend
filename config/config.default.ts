@@ -30,6 +30,9 @@ export default (appInfo: EggAppInfo) => {
   config.bcrypt = {
     saltRounds: 10,
   };
+  config.session = {
+    encrypt: false,
+  };
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
@@ -37,6 +40,7 @@ export default (appInfo: EggAppInfo) => {
       allowedMethod: [ 'POST' ],
     },
     baseUrl: 'default.url',
+    secret: '1234567890',
     // 配置mongoose的连接地址
     // mongoose: {
     //   url: 'mongodb://localhost:27017/hello',

@@ -1,4 +1,5 @@
 import { Controller } from 'egg';
+import { sign, verify } from 'jsonwebtoken';
 const userCreateRules = {
   username: 'email',
   password: { type: 'password', min: 8 },
@@ -46,7 +47,7 @@ export default class UserController extends Controller {
     return errors;
   }
   async loginByEmail() {
-    const { ctx, service } = this;
+    const { ctx, service, app } = this;
     // 检查用户的输入
     const error = this.vaildateUserInput();
     if (error) {
@@ -72,19 +73,60 @@ export default class UserController extends Controller {
     // ctx.cookies.set('username', user.username, { encrypt: true });
 
     // 设置session
-    ctx.session.username = user.username;
-    ctx.helper.success({ ctx, res: user.toJSON(), msg: '登录成功' });
+    // ctx.session.username = user.username;
+
+    // 生成token
+    // Registered claims 注册关的信息
+    // Public claims 公共信息:
+    // should be unique like email, address or phone_number
+    const token = sign({ username: user.username }, app.config.secret, {
+      expiresIn: 60 * 60,
+    });
+    ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
+  }
+  // 获取Token的值
+  getTokenValue() {
+    // JWT Header 格式
+    // Authorization:Bearer tokenXX
+    const { ctx } = this;
+    const { authorization } = ctx.header;
+    if (!ctx.header || !authorization) {
+      return false;
+    }
+    if (typeof authorization === 'string') {
+      const parts = authorization.trim().split(' ');
+      if (parts.length === 2) {
+        const scheme = parts[0];
+        const credentials = parts[1];
+        if (/^Bearer$/i.test(scheme)) {
+          return credentials;
+        }
+        return false;
+      }
+      return false;
+    }
+    return false;
   }
   async show() {
-    const { ctx } = this;
-    const { username } = ctx.session;
+    const { ctx, app } = this;
+    // const { username } = ctx.session;
     // /users/:id
     // const userData = await service.user.findById(ctx.params.id);
     // const username = ctx.cookies.get('username', { encrypt: true });
 
-    if (!username) {
+    const token = this.getTokenValue();
+    if (!token) {
       return ctx.helper.error({ ctx, errorType: 'loginValidateFail' });
     }
-    ctx.helper.success({ ctx, res: username });
+    try {
+      const decoded = verify(token, app.config.secret);
+      ctx.helper.success({ ctx, res: decoded });
+    } catch (e) {
+      return ctx.helper.error({ ctx, errorType: 'loginValidateFail' });
+    }
+    // if (!username) {
+    //   return ctx.helper.error({ ctx, errorType: 'loginValidateFail' });
+    // }
+    // ctx.helper.success({ ctx, res: username });
   }
 }

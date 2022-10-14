@@ -14,6 +14,14 @@ declare module 'egg' {
   interface EggAppConfig {
     bcrypt: {
       saltRounds: number;
-    }
+    };
+  }
+
+  // 定义一个内存模型
+  interface Application {
+    sessionMap: {
+      [key: string]: any;
+    };
+    sessionStore: any;
   }
 }
