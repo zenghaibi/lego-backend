@@ -40,7 +40,9 @@ export default (appInfo: EggAppInfo) => {
       allowedMethod: [ 'POST' ],
     },
     baseUrl: 'default.url',
-    secret: '1234567890',
+    jwt: {
+      secret: '1234567890',
+    },
     // 配置mongoose的连接地址
     // mongoose: {
     //   url: 'mongodb://localhost:27017/hello',
