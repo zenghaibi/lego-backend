@@ -9,7 +9,7 @@ export default (appInfo: EggAppInfo) => {
 
   // add your egg config in here
   // 配置自己写的中间件
-  config.middleware = [];
+  config.middleware = [ 'customError' ];
   config.security = {
     csrf: {
       enable: false,
@@ -33,16 +33,19 @@ export default (appInfo: EggAppInfo) => {
   config.session = {
     encrypt: false,
   };
+  config.jwt = {
+    secret: '1234567890',
+  };
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: {
       allowedMethod: [ 'POST' ],
     },
-    baseUrl: 'default.url',
-    jwt: {
-      secret: '1234567890',
-    },
+    // baseUrl: 'default.url',
+    // jwt: {
+    //   secret: '1234567890',
+    // },
     // 配置mongoose的连接地址
     // mongoose: {
     //   url: 'mongodb://localhost:27017/hello',

@@ -21,6 +21,11 @@ const plugin: EggPlugin = {
     enable: true,
     package: 'egg-bcrypt',
   },
+  // 启用egg-jwt 插件
+  jwt: {
+    enable: true,
+    package: 'egg-jwt',
+  },
 };
 
 export default plugin;
