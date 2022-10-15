@@ -11,4 +11,6 @@ export default (app: Application) => {
   // 这里使用egg-jwt 插件 (app.jwt 这里没有定义类文件所以直接断言成 any)
   router.get('/api/users/getUserInfo', app.jwt as any, controller.user.show);
   router.post('/api/users/loginByEmail', controller.user.loginByEmail);
+  // 生成手机验证码
+  router.post('/api/users/genVeriCode', controller.user.sendVeriCode);
 };

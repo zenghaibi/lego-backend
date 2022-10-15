@@ -4,6 +4,14 @@ const userCreateRules = {
   username: 'email',
   password: { type: 'password', min: 8 },
 };
+// 手机号输入验证规则
+const sendCodeRules = {
+  cellphone: {
+    type: 'string',
+    format: /^1[3-9]\d{9}$/,
+    message: '手机号码格式错误',
+  },
+};
 export const userErrorMessages = {
   userValidateFail: {
     errno: 101001,
@@ -23,12 +31,17 @@ export const userErrorMessages = {
     errno: 101004,
     message: '登录检验失败',
   },
+  // 发送短信验证码过于频繁
+  sendVeriCodeFrequentlyFailInfo: {
+    errno: 101005,
+    message: '请勿频繁获取短信验证码',
+  },
 };
 export default class UserController extends Controller {
   async createByEmail() {
     const { ctx, service } = this;
     // 检查用户的输入
-    const error = this.vaildateUserInput();
+    const error = this.vaildateUserInput(userCreateRules);
     if (error) {
       return ctx.helper.error({ ctx, errorType: 'userValidateFail', error });
     }
@@ -40,16 +53,46 @@ export default class UserController extends Controller {
     const userData = await service.user.createByEmail(ctx.request.body);
     ctx.helper.success({ ctx, res: userData });
   }
-  vaildateUserInput() {
+  vaildateUserInput(rules) {
     const { ctx, app } = this;
-    const errors = app.validator.validate(userCreateRules, ctx.request.body);
+    const errors = app.validator.validate(rules, ctx.request.body);
     ctx.logger.warn(errors);
     return errors;
+  }
+  async sendVeriCode() {
+    const { ctx, app } = this;
+    const { cellphone } = ctx.request.body;
+    console.log('输入手机', cellphone);
+    // 检查用户输入
+    const error = this.vaildateUserInput(sendCodeRules);
+    console.log('测试', error);
+    if (error) {
+      return ctx.helper.error({ ctx, errorType: 'userValidateFail', error });
+    }
+    // 获取 redis 的数据
+    // phoneVeriCode-18080220865
+    const preVeriCode = await app.redis.get(`phoneVeriCode-${cellphone}`);
+    console.log(preVeriCode);
+    // 判断是否存在
+    if (preVeriCode) {
+      return ctx.helper.error({
+        ctx,
+        errorType: 'sendVeriCodeFrequentlyFailInfo',
+      });
+    }
+    // 创建随机4位数的手机验证码
+    // [0 - 1]
+    // [0 - 1] * 9000 = [0 - 9000]
+    // [(0 - 9000) + 1000 = [1000, 10000]
+    const veriCode = Math.floor(Math.random() * 9000 + 1000).toString();
+    // 模拟发送手机验码60秒内有效
+    await app.redis.set(`phoneVeriCode-${cellphone}`, veriCode, 'ex', 60);
+    ctx.helper.success({ ctx, res: { veriCode } });
   }
   async loginByEmail() {
     const { ctx, service, app } = this;
     // 检查用户的输入
-    const error = this.vaildateUserInput();
+    const error = this.vaildateUserInput(userCreateRules);
     if (error) {
       return ctx.helper.error({ ctx, errorType: 'userValidateFail', error });
     }
