@@ -12,6 +12,14 @@ const sendCodeRules = {
     message: '手机号码格式错误',
   },
 };
+const userPhoneCreateRules = {
+  phoneNumber: {
+    type: 'string',
+    format: /^1[3-9]\d{9}$/,
+    message: '手机号码格式错误',
+  },
+  veriCode: { type: 'string', format: /^\d{4}$/, message: '验证码格式错误' },
+};
 export const userErrorMessages = {
   userValidateFail: {
     errno: 101001,
@@ -36,6 +44,11 @@ export const userErrorMessages = {
     errno: 101005,
     message: '请勿频繁获取短信验证码',
   },
+  // 登录时,验证码不正确
+  loginVeriCodeIncorrectFailInfo: {
+    errno: 101006,
+    message: '验证码不正确',
+  },
 };
 export default class UserController extends Controller {
   async createByEmail() {
@@ -59,6 +72,7 @@ export default class UserController extends Controller {
     ctx.logger.warn(errors);
     return errors;
   }
+  // 发送手机验证吗
   async sendVeriCode() {
     const { ctx, app } = this;
     const { cellphone } = ctx.request.body;
@@ -154,6 +168,25 @@ export default class UserController extends Controller {
   //   }
   //   return false;
   // }
+
+  // 手机登录
+  async loginByCellphone() {
+    const { ctx, app } = this;
+    const { phoneNumber, veriCode } = ctx.request.body;
+    // 检查用户输入
+    const error = this.vaildateUserInput(userPhoneCreateRules);
+    if (error) {
+      return ctx.helper.error({ ctx, errorType: 'userValidateFail', error });
+    }
+    // 验证码是否正确
+    const preVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`);
+    if (veriCode !== preVeriCode) {
+      return ctx.helper.error({ ctx, errorType: 'loginVeriCodeIncorrectFailInfo' });
+    }
+    const token = await ctx.service.user.loginByCellphone(phoneNumber);
+    ctx.helper.success({ ctx, res: { token } });
+  }
+
   async show() {
     // const { ctx, app } = this;
     // const { username } = ctx.session;

@@ -13,4 +13,6 @@ export default (app: Application) => {
   router.post('/api/users/loginByEmail', controller.user.loginByEmail);
   // 生成手机验证码
   router.post('/api/users/genVeriCode', controller.user.sendVeriCode);
+  // 手机号+短信验证码登录
+  router.post('/api/users/loginByPhoneNumber', controller.user.loginByCellphone);
 };
