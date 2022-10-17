@@ -20,6 +20,7 @@ export default {
     }
     return this[AXIOS];
   },
+  // 扩展application 一个【ALCLIENT】属性（项目启动自动实例阿里云入口一个客户端实例，供后面直接调用这个instance实例上方法）
   get ALClient(): Dysmsapi20170525 {
     const that = this as Application;
     const { accessKeyId, accessKeySecret } = that.config.aliCloudConfig;

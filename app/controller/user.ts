@@ -103,9 +103,9 @@ export default class UserController extends Controller {
     // [0 - 1] * 9000 = [0 - 9000]
     // [(0 - 9000) + 1000 = [1000, 10000]
     const veriCode = Math.floor(Math.random() * 9000 + 1000).toString();
-    // 发送信息
+    // 调用啊里云短信服务发送验码
     const resp = await this.service.user.sendSMS(cellphone, veriCode);
-    console.log('测试', resp);
+
     if (resp.body.code !== 'OK') {
       return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
     }
