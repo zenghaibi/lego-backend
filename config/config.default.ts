@@ -50,6 +50,11 @@ export default (appInfo: EggAppInfo) => {
     myLogger: {
       allowedMethod: [ 'POST' ],
     },
+    aliCloudConfig: {
+      accessKeyId: 'LTAI5t9XmCHTvAwQyS9k6V1V',
+      accessKeySecret: 'tHgoDozyoIBdtMZy5X59ZVjDTpytx2',
+      endpoint: 'dysmsapi.aliyuncs.com',
+    },
     // baseUrl: 'default.url',
     // jwt: {
     //   secret: '1234567890',

@@ -1,5 +1,6 @@
 import { Service } from 'egg';
 import { UserProps } from '../model/user';
+import * as $Dysmsapi20170525 from '@alicloud/dysmsapi20170525';
 
 export default class UserService extends Service {
   public async createByEmail(playload: UserProps) {
@@ -23,6 +24,22 @@ export default class UserService extends Service {
   }
   async findByUsername(username: string) {
     return await this.ctx.model.User.findOne({ username });
+  }
+  // 可里云短信云发送手机验证码
+  async sendSMS(phoneNumber: string, veriCode: string) {
+    const { app } = this;
+    // 配置参数
+    console.log(phoneNumber);
+    console.log(veriCode);
+    const sendSMSRequest = new $Dysmsapi20170525.SendSmsRequest({
+      signName: '阿里云短信测试',
+      templateCode: 'SMS_154950909',
+      phoneNumbers: phoneNumber,
+      templateParam: `{\"code\":\"${veriCode}\"}`,
+    });
+    console.log('测试1', sendSMSRequest);
+    const resp = await app.ALClient.sendSms(sendSMSRequest);
+    return resp;
   }
   async loginByCellphone(cellphone: string) {
     const { ctx, app } = this;

@@ -49,6 +49,11 @@ export const userErrorMessages = {
     errno: 101006,
     message: '验证码不正确',
   },
+  // 验证码发送失败
+  sendVeriCodeError: {
+    errno: 101007,
+    message: '验证码发送失败',
+  },
 };
 export default class UserController extends Controller {
   async createByEmail() {
@@ -76,10 +81,9 @@ export default class UserController extends Controller {
   async sendVeriCode() {
     const { ctx, app } = this;
     const { cellphone } = ctx.request.body;
-    console.log('输入手机', cellphone);
+    // console.log('输入手机', cellphone);
     // 检查用户输入
     const error = this.vaildateUserInput(sendCodeRules);
-    console.log('测试', error);
     if (error) {
       return ctx.helper.error({ ctx, errorType: 'userValidateFail', error });
     }
@@ -99,9 +103,15 @@ export default class UserController extends Controller {
     // [0 - 1] * 9000 = [0 - 9000]
     // [(0 - 9000) + 1000 = [1000, 10000]
     const veriCode = Math.floor(Math.random() * 9000 + 1000).toString();
+    // 发送信息
+    const resp = await this.service.user.sendSMS(cellphone, veriCode);
+    console.log('测试', resp);
+    if (resp.body.code !== 'OK') {
+      return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
+    }
     // 模拟发送手机验码60秒内有效
     await app.redis.set(`phoneVeriCode-${cellphone}`, veriCode, 'ex', 60);
-    ctx.helper.success({ ctx, res: { veriCode } });
+    ctx.helper.success({ ctx, msg: '验证码发送成功' });
   }
   async loginByEmail() {
     const { ctx, service, app } = this;
@@ -181,7 +191,10 @@ export default class UserController extends Controller {
     // 验证码是否正确
     const preVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`);
     if (veriCode !== preVeriCode) {
-      return ctx.helper.error({ ctx, errorType: 'loginVeriCodeIncorrectFailInfo' });
+      return ctx.helper.error({
+        ctx,
+        errorType: 'loginVeriCodeIncorrectFailInfo',
+      });
     }
     const token = await ctx.service.user.loginByCellphone(phoneNumber);
     ctx.helper.success({ ctx, res: { token } });
