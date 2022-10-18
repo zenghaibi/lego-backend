@@ -103,15 +103,24 @@ export default class UserController extends Controller {
     // [0 - 1] * 9000 = [0 - 9000]
     // [(0 - 9000) + 1000 = [1000, 10000]
     const veriCode = Math.floor(Math.random() * 9000 + 1000).toString();
-    // 调用啊里云短信服务发送验码
-    const resp = await this.service.user.sendSMS(cellphone, veriCode);
+    // 发送短信
+    // 判断是否为生产环境
+    if (app.config.env === 'prod') {
+      // 调用啊里云短信服务发送验码
+      const resp = await this.service.user.sendSMS(cellphone, veriCode);
 
-    if (resp.body.code !== 'OK') {
-      return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
+      if (resp.body.code !== 'OK') {
+        return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
+      }
     }
+    console.log(app.config.aliCloudConfig);
     // 模拟发送手机验码60秒内有效
     await app.redis.set(`phoneVeriCode-${cellphone}`, veriCode, 'ex', 60);
-    ctx.helper.success({ ctx, msg: '验证码发送成功' });
+    ctx.helper.success({
+      ctx,
+      msg: '验证码发送成功',
+      res: app.config.env === 'local' ? { veriCode } : null,
+    });
   }
   async loginByEmail() {
     const { ctx, service, app } = this;
@@ -151,7 +160,7 @@ export default class UserController extends Controller {
       app.config.jwt.secret,
       {
         expiresIn: 60 * 60,
-      },
+      }
     );
     ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }

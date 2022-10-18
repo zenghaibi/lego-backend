@@ -1,5 +1,6 @@
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>;
 
@@ -51,8 +52,8 @@ export default (appInfo: EggAppInfo) => {
       allowedMethod: [ 'POST' ],
     },
     aliCloudConfig: {
-      accessKeyId: 'LTAI5t9XmCHTvAwQyS9k6V1V',
-      accessKeySecret: 'tHgoDozyoIBdtMZy5X59ZVjDTpytx2',
+      accessKeyId: process.env.ALC_ACCESS_KEY,
+      accessKeySecret: process.env.ALC_SECRET_KEY,
       endpoint: 'dysmsapi.aliyuncs.com',
     },
     // baseUrl: 'default.url',
