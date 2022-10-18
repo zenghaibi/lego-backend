@@ -15,4 +15,7 @@ export default (app: Application) => {
   router.post('/api/users/genVeriCode', controller.user.sendVeriCode);
   // 手机号+短信验证码登录
   router.post('/api/users/loginByPhoneNumber', controller.user.loginByCellphone);
+  // gitee Oauth2
+  router.get('/api/users/passport/gitee', controller.user.oauth);
+  router.get('/api/users/passport/gitee/callback', controller.user.oauthByGitee);
 };

@@ -49,7 +49,7 @@ export default class UserService extends Service {
       // getnerate token
       const token = app.jwt.sign(
         { username: user.username },
-        app.config.jwt.secret,
+        app.config.jwt.secret
       );
       return token;
     }
@@ -63,8 +63,25 @@ export default class UserService extends Service {
     const newUser = await ctx.model.User.create(userCreatedData);
     const token = app.jwt.sign(
       { username: newUser.username },
-      app.config.jwt.secret,
+      app.config.jwt.secret
     );
     return token;
+  }
+  async getAccessToken(code: string) {
+    const { ctx, app } = this;
+    const { cid, secret, redirectURL, authURL } = app.config.giteeOauthConfig;
+    const { data } = await ctx.curl(authURL, {
+      method: 'POST',
+      contentType: 'json',
+      dataType: 'json',
+      data: {
+        code,
+        client_id: cid,
+        redirect_uri: redirectURL,
+        client_secret: secret,
+      },
+    });
+    app.logger.info(data);
+    return data;
   }
 }

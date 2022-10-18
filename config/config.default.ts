@@ -10,7 +10,7 @@ export default (appInfo: EggAppInfo) => {
 
   // add your egg config in here
   // 配置自己写的中间件
-  config.middleware = [ 'customError' ];
+  config.middleware = ['customError'];
   config.security = {
     csrf: {
       enable: false,
@@ -45,6 +45,13 @@ export default (appInfo: EggAppInfo) => {
       db: 0,
     },
   };
+  // gitee oauth config
+  const giteeOauthConfig = {
+    cid: process.env.GITEE_CID,
+    secret: process.env.GITEE_SECRET,
+    redirectURL: 'http://localhost:7001/api/users/passport/gitee/callback',
+    authURL: 'https://gitee.com/oauth/token?grant_type=authorization_code',
+  };
   // add your special config in here
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
@@ -56,6 +63,7 @@ export default (appInfo: EggAppInfo) => {
       accessKeySecret: process.env.ALC_SECRET_KEY,
       endpoint: 'dysmsapi.aliyuncs.com',
     },
+    giteeOauthConfig,
     // baseUrl: 'default.url',
     // jwt: {
     //   secret: '1234567890',
