@@ -10,7 +10,7 @@ export default (appInfo: EggAppInfo) => {
 
   // add your egg config in here
   // 配置自己写的中间件
-  config.middleware = ['customError'];
+  config.middleware = [ 'customError' ];
   config.security = {
     csrf: {
       enable: false,
@@ -44,6 +44,10 @@ export default (appInfo: EggAppInfo) => {
       password: '',
       db: 0,
     },
+  };
+  config.cors = {
+    origin: 'http://localhost:8080',
+    allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
   };
   // gitee oauth config
   const giteeOauthConfig = {

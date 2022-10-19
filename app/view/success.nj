@@ -15,7 +15,11 @@
 <script>
   window.onload = function() {
     setTimeout(() => {
-      window.opener.postMessage('{{token}}','http://localhost:8080')
+      const message = {
+        type: 'oauth-token',
+        token: '{{token}}'
+      }
+      window.opener.postMessage(message,'http://localhost:8080')
       window.close()
     }, 2000)
   }
