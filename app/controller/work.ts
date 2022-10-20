@@ -29,6 +29,7 @@ export default class WorkController extends Controller {
     const workData = await service.work.createEmptyWork(ctx.request.body);
     ctx.helper.success({ ctx, res: workData });
   }
+  // 查询我作品列表
   async myList() {
     const { ctx } = this;
     const userId = ctx.state.user._id;
@@ -45,9 +46,23 @@ export default class WorkController extends Controller {
       ...(pageIndex && { pageIndex: parseInt(pageIndex) }),
       ...(pageSize && { pageSize: parseInt(pageSize) }),
     };
-    console.log('查询条件', listCondition);
     const res = await this.service.work.getList(listCondition);
     console.log(res);
+    ctx.helper.success({ ctx, res });
+  }
+  // 查询模版
+  async templateList() {
+    const { ctx } = this;
+    const { pageIndex, pageSize } = ctx.query;
+    const listCondition: IndexCondition = {
+      select: 'id author copiedCount coverImag desc title user isHot createAt',
+      populate: { path: 'user', select: 'username nickName picture' },
+      find: { isPublic: true, isTemplate: true },
+      ...(pageIndex && { pageIndex: parseInt(pageIndex) }),
+      ...(pageSize && { pageSize: parseInt(pageSize) }),
+    };
+
+    const res = await ctx.service.work.getList(listCondition);
     ctx.helper.success({ ctx, res });
   }
 }
