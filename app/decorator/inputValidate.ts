@@ -1,6 +1,3 @@
-**1.新创建目录decorator中添inputValidate.ts**
-
-```javascript
 import { GlobErrorTypes } from '../error';
 import { Controller } from 'egg';
 // 创建工厂函数传入 rules 和 errorType
@@ -20,27 +17,3 @@ export default function validateInput(rules: any, errorType: GlobErrorTypes) {
     };
   };
 }
-
-```
-
-**2.修改原来在controller中的work.ts文件进行调用：**
-
-```javascript
-import { Controller } from 'egg';
-import validateInput from '../decorator/inputValidate';
-const workCreateRules = {
-  title: 'string',
-};
-
-export default class WorkController extends Controller {
-  @validateInput(workCreateRules, 'workValidateFail')
-  async createWork() {
-    const { ctx, service } = this;
-    const workData = await service.work.createEmptyWork(ctx.request.body);
-    ctx.helper.success({ ctx, res: workData });
-  }
-}
-
-```
-
-![1666242981472](image/8-5使用装饰器完成用户输入验证/1666242981472.png)
