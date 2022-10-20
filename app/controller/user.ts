@@ -90,7 +90,7 @@ export default class UserController extends Controller {
       return ctx.helper.error({ ctx, errorType: 'loginCheckFailInfo' });
     }
     const token = app.jwt.sign(
-      { username: user.username },
+      { username: user.username, _id: user._id },
       app.config.jwt.secret,
       {
         expiresIn: 60 * 60,

@@ -27,4 +27,5 @@ export default (app: Application) => {
   );
 
   router.post('/api/works', jwtMiddlewate, controller.work.createWork);
+  router.get('/api/works', jwtMiddlewate, controller.work.myList);
 };
