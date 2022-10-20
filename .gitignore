@@ -20,4 +20,5 @@ test/**/*.map
 config/**/*.map
 
 .env
-.log.txt
+log.txt
+dump.rdb
