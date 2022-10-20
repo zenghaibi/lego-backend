@@ -1,6 +1,5 @@
 import { Context } from 'egg';
-import { userErrorMessages } from '../controller/user';
-import { workErrorMessages } from '../controller/work';
+import { GlobErrorTypes, globalErrorMessages } from '../error/index';
 
 interface RespType {
   ctx: Context;
@@ -9,13 +8,9 @@ interface RespType {
 }
 interface ErrorRespType {
   ctx: Context;
-  errorType: keyof(typeof userErrorMessages & typeof workErrorMessages);
+  errorType: GlobErrorTypes;
   error?: any;
 }
-const globalErrorMessages = {
-  ...userErrorMessages,
-  ...workErrorMessages,
-};
 export default {
   success({ ctx, res, msg }: RespType) {
     ctx.body = {
