@@ -56,8 +56,8 @@ export default class UserService extends Service {
     if (user) {
       // getnerate token
       const token = app.jwt.sign(
-        { username: user.username },
-        app.config.jwt.secret
+        { username: user.username, _id: user._id },
+        app.config.jwt.secret,
       );
       return token;
     }
@@ -70,8 +70,8 @@ export default class UserService extends Service {
     };
     const newUser = await ctx.model.User.create(userCreatedData);
     const token = app.jwt.sign(
-      { username: newUser.username },
-      app.config.jwt.secret
+      { username: newUser.username, _id: newUser._id },
+      app.config.jwt.secret,
     );
     return token;
   }
@@ -101,7 +101,7 @@ export default class UserService extends Service {
       `${giteeUserAPI}?access_token=${access_token}`,
       {
         dataType: 'json',
-      }
+      },
     );
     return data;
   }
@@ -121,7 +121,7 @@ export default class UserService extends Service {
     const existUser = await this.findByUsername(`Gitee${stringId}`);
     if (existUser) {
       const token = app.jwt.sign(
-        { username: existUser.username },
+        { username: existUser.username, _id: existUser._id },
         app.config.jwt.secret,
       );
       return token;
@@ -138,7 +138,7 @@ export default class UserService extends Service {
     };
     const newUser = await ctx.model.User.create(userCreateData);
     const token = app.jwt.sign(
-      { username: newUser.username },
+      { username: newUser.username, _id: newUser._id },
       app.config.jwt.secret,
     );
     return token;

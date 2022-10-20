@@ -165,7 +165,7 @@ export default class UserController extends Controller {
       app.config.jwt.secret,
       {
         expiresIn: 60 * 60,
-      }
+      },
     );
     ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }
@@ -217,7 +217,7 @@ export default class UserController extends Controller {
     const { app, ctx } = this;
     const { cid, redirectURL } = app.config.giteeOauthConfig;
     ctx.redirect(
-      `https://gitee.com/oauth/authorize?client_id=${cid}&redirect_uri=${redirectURL}&response_type=code`
+      `https://gitee.com/oauth/authorize?client_id=${cid}&redirect_uri=${redirectURL}&response_type=code`,
     );
   }
   async oauthByGitee() {
