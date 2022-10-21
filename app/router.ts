@@ -33,4 +33,6 @@ export default (app: Application) => {
   router.delete('/api/works/:id', jwtMiddlewate, controller.work.delete);
   router.post('/api/works/publish/:id', jwtMiddlewate, controller.work.publishWork);
   router.post('/api/works/publish-template/:id', jwtMiddlewate, controller.work.publishTemplate);
+
+  router.post('/api/utils/upload', controller.utils.fileLocalUpload);
 };
