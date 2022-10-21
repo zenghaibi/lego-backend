@@ -65,4 +65,42 @@ export default class WorkController extends Controller {
     const res = await ctx.service.work.getList(listCondition);
     ctx.helper.success({ ctx, res });
   }
+  // 权限检查
+  async checkPerimssion(id: number) {
+    const { ctx } = this;
+    // 获取当前用户的ID
+    const userId = ctx.state.user._id;
+    // 查询作品信息
+    const certianWork = await ctx.model.Work.findOne({ id });
+    if (!certianWork) {
+      return false;
+    }
+    // 检查是否相等，特别注决转换成字符串
+    return certianWork.user.toString() === userId;
+  }
+  // 更新作品
+  async update() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const permission = await this.checkPerimssion(parseInt(id));
+    if (!permission) {
+      return ctx.helper.error({ ctx, errorType: 'workNoPermissonFail' });
+    }
+    const payload = ctx.request.body;
+    const res = await ctx.model.Work.findOneAndUpdate({ id }, payload, {
+      new: true,
+    }).lean();
+    ctx.helper.success({ ctx, res });
+  }
+  // 删除作品
+  async delete() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const permission = await this.checkPerimssion(parseInt(id));
+    if (!permission) {
+      return ctx.helper.error({ ctx, errorType: 'workNoPermissonFail' });
+    }
+    const res = await ctx.model.Work.findOneAndDelete({ id: parseInt(id) }).select('_id id title').lean();
+    ctx.helper.success({ ctx, res });
+  }
 }
