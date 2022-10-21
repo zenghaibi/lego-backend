@@ -1,6 +1,7 @@
 import { Controller } from 'egg';
 import { PopulateOptions } from 'mongoose';
 import validateInput from '../decorator/inputValidate';
+import checkPerimssion from '../decorator/checkPermission';
 const workCreateRules = {
   title: 'string',
 };
@@ -65,27 +66,11 @@ export default class WorkController extends Controller {
     const res = await ctx.service.work.getList(listCondition);
     ctx.helper.success({ ctx, res });
   }
-  // 权限检查
-  async checkPerimssion(id: number) {
-    const { ctx } = this;
-    // 获取当前用户的ID
-    const userId = ctx.state.user._id;
-    // 查询作品信息
-    const certianWork = await ctx.model.Work.findOne({ id });
-    if (!certianWork) {
-      return false;
-    }
-    // 检查是否相等，特别注决转换成字符串
-    return certianWork.user.toString() === userId;
-  }
   // 更新作品
+  @checkPerimssion('Work', 'workNoPermissonFail')
   async update() {
     const { ctx } = this;
     const { id } = ctx.params;
-    const permission = await this.checkPerimssion(parseInt(id));
-    if (!permission) {
-      return ctx.helper.error({ ctx, errorType: 'workNoPermissonFail' });
-    }
     const payload = ctx.request.body;
     const res = await ctx.model.Work.findOneAndUpdate({ id }, payload, {
       new: true,
@@ -93,14 +78,27 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
   // 删除作品
+  @checkPerimssion('Work', 'workNoPermissonFail')
   async delete() {
     const { ctx } = this;
     const { id } = ctx.params;
-    const permission = await this.checkPerimssion(parseInt(id));
-    if (!permission) {
-      return ctx.helper.error({ ctx, errorType: 'workNoPermissonFail' });
-    }
-    const res = await ctx.model.Work.findOneAndDelete({ id: parseInt(id) }).select('_id id title').lean();
+    const res = await ctx.model.Work.findOneAndDelete({ id }).select('_id id title').lean();
     ctx.helper.success({ ctx, res });
+  }
+  // 发布
+  @checkPerimssion('Work', 'workNoPermissonFail')
+  async publish(isTemplate: boolean) {
+    const { ctx } = this;
+    const url = await ctx.service.work.publish(ctx.params.id, isTemplate);
+    ctx.helper.success({ ctx, res: { url } });
+  }
+  // 发布作品
+  async publishWork() {
+    console.log('1111');
+    await this.publish(false);
+  }
+  // 发布模版
+  async publishTemplate() {
+    await this.publish(true);
   }
 }

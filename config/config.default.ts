@@ -45,6 +45,9 @@ export default (appInfo: EggAppInfo) => {
       db: 0,
     },
   };
+  config.multipart = {
+    mode: 'file',
+  };
   config.cors = {
     origin: 'http://localhost:8080',
     allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
@@ -69,6 +72,7 @@ export default (appInfo: EggAppInfo) => {
       endpoint: 'dysmsapi.aliyuncs.com',
     },
     giteeOauthConfig,
+    H5BaseURL: 'http://localhost:7001/api/pages',
     // baseUrl: 'default.url',
     // jwt: {
     //   secret: '1234567890',
