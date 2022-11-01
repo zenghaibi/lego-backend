@@ -1,9 +1,29 @@
 import { Controller } from 'egg';
 import sharp from 'sharp';
+import sendToWormhole from 'stream-wormhole';
 import { parse, join, extname } from 'path';
 import { nanoid } from 'nanoid';
 import { createWriteStream } from 'fs';
+import { pipeline } from 'stream/promises';
+
 export default class UtilsController extends Controller {
+  // 上传到阿里云oss
+  async uploadToOSS() {
+    const { ctx, app } = this;
+    const stream = await ctx.getFileStream();
+    // hblogo-backend/hb-iot/**.ext
+    const savedOSSPath = join('hb-iot', nanoid(6) + extname(stream.filename));
+    try {
+      const result = await ctx.oss.put(savedOSSPath, stream);
+      app.logger.info(result);
+      const { name, url } = result;
+      ctx.helper.success({ ctx, res: { name, url } });
+    } catch (error) {
+      await sendToWormhole(stream);
+      ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
+    }
+  }
+
   async fileLocalUpload() {
     const { ctx, app } = this;
     const { filepath } = ctx.request.files[0];
@@ -23,7 +43,7 @@ export default class UtilsController extends Controller {
       await imageSource.resize({ width: 300 }).toFile(thumbnailFilePath);
       thumbnailUrl = thumbnailFilePath.replace(
         app.config.baseDir,
-        app.config.baseUrl,
+        app.config.baseUrl
       );
     }
     const url = filepath.replace(app.config.baseDir, app.config.baseUrl);
@@ -48,18 +68,19 @@ export default class UtilsController extends Controller {
     const savedFilePath = join(
       app.config.baseDir,
       'uploads',
-      uid + extname(stream.filename),
+      uid + extname(stream.filename)
     );
     // 确定上传文件图片缩略图片路径
     const savedThumbnailPath = join(
       app.config.baseDir,
       'uploads',
-      uid + '_thumbnail' + extname(stream.filename),
+      uid + '_thumbnail' + extname(stream.filename)
     );
     // 创建写上传图片的写入流
     const target = createWriteStream(savedFilePath);
     // 创建写上传图片缩略图的写入流
     const target2 = createWriteStream(savedThumbnailPath);
+    /*
     // 用Promise方式来操作stream流读写操作
     const savePrommise = new Promise((resolve, reject) => {
       stream.pipe(target).on('finish', resolve).on('error', reject);
@@ -75,8 +96,18 @@ export default class UtilsController extends Controller {
         .on('error', reject);
     });
 
-    // 调用await 全部 Promise 
+    // 调用await 全部 Promise
     await Promise.all([ savePrommise, thumbnailPromise ]);
+    */
+    // 采用pipeline自带promise自写法
+    const savePromise = pipeline(stream, target);
+    const transformer = sharp().resize({ width: 300 });
+    const thumbnailPromise = pipeline(stream, transformer, target2);
+    try {
+      await Promise.all([savePromise, thumbnailPromise]);
+    } catch (e) {
+      return ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
+    }
     // 最终返回上传图片URL 及 缩略图的 thumbnailUrl
     ctx.helper.success({
       ctx,

@@ -1,13 +1,13 @@
 import { Controller } from 'egg';
-import { GlobErrorTypes } from '../error';
+import { GlobalErrorTypes } from '../error';
 export default function checkPerimssion(
   modelName: string,
-  errorType: GlobErrorTypes,
-  userKey = 'user',
+  errorType: GlobalErrorTypes,
+  userKey = 'user'
 ) {
-  return function(_prototype, _key: string, descriptor: PropertyDescriptor) {
+  return function (_prototype, _key: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
-    descriptor.value = async function(...args: any[]) {
+    descriptor.value = async function (...args: any[]) {
       const that = this as Controller;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

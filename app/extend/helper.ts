@@ -1,5 +1,5 @@
 import { Context } from 'egg';
-import { GlobErrorTypes, globalErrorMessages } from '../error/index';
+import { GlobalErrorTypes, globalErrorMessages } from '../error/index';
 
 interface RespType {
   ctx: Context;
@@ -8,7 +8,7 @@ interface RespType {
 }
 interface ErrorRespType {
   ctx: Context;
-  errorType: GlobErrorTypes;
+  errorType: GlobalErrorTypes;
   error?: any;
 }
 export default {

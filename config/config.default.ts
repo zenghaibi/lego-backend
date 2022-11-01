@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { EggAppConfig, EggAppInfo, PowerPartial } from 'egg';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>;
@@ -11,7 +12,7 @@ export default (appInfo: EggAppInfo) => {
 
   // add your egg config in here
   // 配置自己写的中间件
-  config.middleware = [ 'customError' ];
+  config.middleware = ['customError'];
   config.security = {
     csrf: {
       enable: false,
@@ -28,6 +29,10 @@ export default (appInfo: EggAppInfo) => {
   // 配置自定义插件
   config.mongoose = {
     url: 'mongodb://localhost:27017/lego',
+    options: {
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    },
   };
   config.bcrypt = {
     saltRounds: 10,
@@ -60,6 +65,15 @@ export default (appInfo: EggAppInfo) => {
     origin: 'http://localhost:8080',
     allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
   };
+  // 阿里云对象存储
+  config.oss = {
+    client: {
+      accessKeyId: process.env.ALC_ACCESS_KEY || '',
+      accessKeySecret: process.env.ALC_SECRET_KEY || '',
+      bucket: 'hblego-backend',
+      endpoint: 'oss-cn-chengdu.aliyuncs.com',
+    },
+  };
   // gitee oauth config
   const giteeOauthConfig = {
     cid: process.env.GITEE_CID,
@@ -72,8 +86,9 @@ export default (appInfo: EggAppInfo) => {
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: {
-      allowedMethod: [ 'POST' ],
+      allowedMethod: ['POST'],
     },
+    // 发短信配置
     aliCloudConfig: {
       accessKeyId: process.env.ALC_ACCESS_KEY,
       accessKeySecret: process.env.ALC_SECRET_KEY,
