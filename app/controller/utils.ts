@@ -1,6 +1,7 @@
 import { Controller } from 'egg';
 import sharp from 'sharp';
 import sendToWormhole from 'stream-wormhole';
+import Busboy = require('busboy');
 import { parse, join, extname } from 'path';
 import { nanoid } from 'nanoid';
 import { createWriteStream } from 'fs';
@@ -22,6 +23,41 @@ export default class UtilsController extends Controller {
       await sendToWormhole(stream);
       ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
     }
+  }
+
+  uploadFileUseBusBoy() {
+    const { app, ctx } = this;
+    return new Promise<string[]>(resolve => {
+      const busboy = new Busboy({ headers: ctx.req.headers as any });
+      const results: string[] = [];
+      busboy.on('file', (filedname, file, filename) => {
+        app.logger.info(filedname, file, filename);
+        const uid = nanoid(6);
+        const savedFilePath = join(
+          app.config.baseDir,
+          'uploads',
+          uid + extname(filename),
+        );
+        file.pipe(createWriteStream(savedFilePath));
+        file.on('end', () => {
+          results.push(savedFilePath);
+        });
+      });
+      busboy.on('field', (fieldname, val) => {
+        app.logger.info(fieldname, val);
+      });
+      busboy.on('finish', () => {
+        app.logger.info('finished');
+        resolve(results);
+      });
+      ctx.req.pipe(busboy);
+    });
+  }
+
+  async testBsuBoy() {
+    const { ctx } = this;
+    const results = await this.uploadFileUseBusBoy();
+    ctx.helper.success({ ctx, res: results });
   }
 
   async fileLocalUpload() {
