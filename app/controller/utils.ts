@@ -6,6 +6,7 @@ import { parse, join, extname } from 'path';
 import { nanoid } from 'nanoid';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
+import { FileStream } from '../../typings/app';
 
 export default class UtilsController extends Controller {
   // 上传到阿里云oss
@@ -24,7 +25,31 @@ export default class UtilsController extends Controller {
       ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
     }
   }
-
+  async uploadMutipleFiles() {
+    const { ctx, app } = this;
+    const parts = ctx.multipart();
+    // { urls: [ xxx, xxx ]}
+    const urls: string[] = [];
+    let part: FileStream | string[];
+    while ((part = await parts())) {
+      // 如果是 string [] 文体就不做处理
+      if (Array.isArray(part)) {
+        app.logger.info(part);
+      } else {
+        try {
+          const savedOSSPath = join('hb-iot', nanoid(6) + extname(part.filename));
+          const result = await ctx.oss.put(savedOSSPath, part);
+          const { url } = result;
+          urls.push(url);
+        } catch (error) {
+          // 异常将part给销毁掉
+          await sendToWormhole(part);
+          ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
+        }
+      }
+    }
+    ctx.helper.success({ ctx, res: { urls } });
+  }
   uploadFileUseBusBoy() {
     const { app, ctx } = this;
     return new Promise<string[]>(resolve => {
@@ -36,7 +61,7 @@ export default class UtilsController extends Controller {
         const savedFilePath = join(
           app.config.baseDir,
           'uploads',
-          uid + extname(filename),
+          uid + extname(filename)
         );
         file.pipe(createWriteStream(savedFilePath));
         file.on('end', () => {
@@ -56,7 +81,8 @@ export default class UtilsController extends Controller {
 
   async testBsuBoy() {
     const { ctx } = this;
-    const results = await this.uploadFileUseBusBoy();
+    // const results = await this.uploadFileUseBusBoy();
+    const results = await this.uploadMutipleFiles();
     ctx.helper.success({ ctx, res: results });
   }
 
