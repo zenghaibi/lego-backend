@@ -6,9 +6,27 @@ import { parse, join, extname } from 'path';
 import { nanoid } from 'nanoid';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
+import { createSSRApp } from 'vue';
+import { renderToNodeStream } from '@vue/server-renderer';
 import { FileStream } from '../../typings/app';
 
 export default class UtilsController extends Controller {
+  // SSR 服务端渲染H5页面
+  async renderH5Page() {
+    const { ctx } = this;
+    const vueApp = createSSRApp({
+      data: () => ({ msg: 'hello world' }),
+      template: '<h1>{{msg}}</h1>',
+    });
+    // 渲染生成字符串
+    // const appContent = await renderToString(vueApp);
+    // ctx.response.type = 'text/html';
+    // ctx.body = appContent;
+    // 渲染生成文个流
+    const stream = renderToNodeStream(vueApp);
+    ctx.status = 200;
+    await pipeline(stream, ctx.res);
+  }
   // 上传到阿里云oss
   async uploadToOSS() {
     const { ctx, app } = this;

@@ -38,10 +38,12 @@ export default class AppBoot implements IBoot {
     // console.log('config', this.app.config.baseUrl);
     // console.log('enable middleware', this.app.config.coreMiddleware);
     // this.app.config.coreMiddleware.unshift('myLogger');
+    // 添加 customError 中间件
+    this.app.config.coreMiddleware.push('customError');
   }
   // 插件启动完毕（willReady) 异步
   async willReady() {
-    // console.log('enable willready', this.app.config.coreMiddleware);
+    console.log('enable willready', this.app.config.coreMiddleware);
     // app/model/user.ts => app.model.User
     // const dir = join(this.app.config.baseDir, 'app/model');
     // this.app.loader.loadToApp(dir, 'model', {
@@ -54,6 +56,6 @@ export default class AppBoot implements IBoot {
     const ctx = await this.app.createAnonymousContext();
     const res = await ctx.service.test.sayHi('kevin');
     console.log('did ready res', res);
-    // console.log('final middlewares', this.app.middleware);
+    console.log('final middlewares', this.app.middleware);
   }
 }

@@ -6,11 +6,10 @@ export default (app: Application) => {
   // const jwt = app.middleware.jwt({
   //   secret: app.config.jwt.secret,
   // });
-  const jwtMiddlewate = app.jwt as any;
   router.get('/', controller.home.index);
   router.post('/api/users/create', controller.user.createByEmail);
   // 这里使用egg-jwt 插件 (app.jwt 这里没有定义类文件所以直接断言成 any)
-  router.get('/api/users/getUserInfo', jwtMiddlewate, controller.user.show);
+  router.get('/api/users/getUserInfo', controller.user.show);
   router.post('/api/users/loginByEmail', controller.user.loginByEmail);
   // 生成手机验证码
   router.post('/api/users/genVeriCode', controller.user.sendVeriCode);
@@ -26,13 +25,14 @@ export default (app: Application) => {
     controller.user.oauthByGitee,
   );
 
-  router.post('/api/works', jwtMiddlewate, controller.work.createWork);
-  router.get('/api/works', jwtMiddlewate, controller.work.myList);
+  router.post('/api/works', controller.work.createWork);
+  router.get('/api/works', controller.work.myList);
   router.get('/api/templates', controller.work.templateList);
-  router.patch('/api/works/:id', jwtMiddlewate, controller.work.update);
-  router.delete('/api/works/:id', jwtMiddlewate, controller.work.delete);
-  router.post('/api/works/publish/:id', jwtMiddlewate, controller.work.publishWork);
-  router.post('/api/works/publish-template/:id', jwtMiddlewate, controller.work.publishTemplate);
+  router.patch('/api/works/:id', controller.work.update);
+  router.delete('/api/works/:id', controller.work.delete);
+  router.post('/api/works/publish/:id', controller.work.publishWork);
+  router.post('/api/works/publish-template/:id', controller.work.publishTemplate);
 
   router.post('/api/utils/upload', controller.utils.uploadMutipleFiles);
+  router.get('/pages/:idAndUuid', controller.utils.renderH5Page);
 };
