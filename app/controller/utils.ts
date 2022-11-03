@@ -27,7 +27,8 @@ export default class UtilsController extends Controller {
   }
   async uploadMutipleFiles() {
     const { ctx, app } = this;
-    const parts = ctx.multipart();
+    const { fileSize } = app.config.multipart;
+    const parts = ctx.multipart({ limits: { fileSize: fileSize as number } });
     // { urls: [ xxx, xxx ]}
     const urls: string[] = [];
     let part: FileStream | string[];
@@ -37,10 +38,21 @@ export default class UtilsController extends Controller {
         app.logger.info(part);
       } else {
         try {
-          const savedOSSPath = join('hb-iot', nanoid(6) + extname(part.filename));
+          const savedOSSPath = join(
+            'hb-iot',
+            nanoid(6) + extname(part.filename)
+          );
           const result = await ctx.oss.put(savedOSSPath, part);
           const { url } = result;
           urls.push(url);
+          if (part.truncated) {
+            await ctx.oss.delete(savedOSSPath);
+            return ctx.helper.error({
+              ctx,
+              errorType: 'imageUploadFileSizeError',
+              error: `Reach filesize limt ${fileSize}`,
+            });
+          }
         } catch (error) {
           // 异常将part给销毁掉
           await sendToWormhole(part);
@@ -61,7 +73,7 @@ export default class UtilsController extends Controller {
         const savedFilePath = join(
           app.config.baseDir,
           'uploads',
-          uid + extname(filename)
+          uid + extname(filename),
         );
         file.pipe(createWriteStream(savedFilePath));
         file.on('end', () => {
