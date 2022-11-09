@@ -1,21 +1,13 @@
-import { Service } from 'egg';
-import { createSSRApp } from 'vue';
-import LegoComponents from 'lego-components';
-import { renderToString } from '@vue/server-renderer';
-export default class UtilsService extends Service {
-  propsToStyple(props = {}) {
-    const keys = Object.keys(props);
-    const styleArr = keys.map(key => {
-      const formatKey = key.replace(
-        /[A-Z]/g,
-        c => `-${c.toLocaleLowerCase()}`,
-      );
-      // fontSize -> font-size
-      const value = props[key];
-      return `${formatKey}: ${value}`;
-    });
-    return styleArr.join(';');
-  }
+#### 在线正则表达式网站：regexr.com
+
+* 之前使用绝位定位px象素，如果宽度发生变化，位置会发生偏移。
+* 所以需要将px 转负成vw，以视器宽度进行同比缩放调整
+
+  * 以画布宽375 做为标准
+  * 25px => (25 / 375) * 100 = 0.06vw
+* 在service中添加一个px2vw()方法进行转负计算处理
+
+  ```typescript
   px2vw(components = []) {
     // '10px' '9.5px'
     const reg = /^(\d+(\.\d+)?)px$/;
@@ -41,7 +33,12 @@ export default class UtilsService extends Service {
       });
     });
   }
-  async renderToPageData(query: { id: number; uuid: string }) {
+  ```
+
+  * 在renderToPageData下面进行调用
+
+  ```typeseript
+    async renderToPageData(query: { id: number; uuid: string }) {
     const work = await this.ctx.model.Work.findOne(query).lean();
     if (!work) {
       throw new Error('work not exsit');
@@ -68,4 +65,10 @@ export default class UtilsService extends Service {
       bodyStyle,
     };
   }
+  ```
+
 }
+
+#### 成功转换后
+
+![1668020987626](image/5-5px转换成vw/1668020987626.png)
