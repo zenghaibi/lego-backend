@@ -34,5 +34,5 @@ export default (app: Application) => {
   router.post('/api/works/publish-template/:id', controller.work.publishTemplate);
 
   router.post('/api/utils/upload', controller.utils.uploadMutipleFiles);
-  router.get('/pages/:idAndUuid', controller.utils.renderH5Page);
+  router.get('/api/pages/:idAndUuid', controller.utils.renderH5Page);
 };

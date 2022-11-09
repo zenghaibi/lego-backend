@@ -43,7 +43,7 @@ export default (appInfo: EggAppInfo) => {
   config.jwt = {
     enable: true,
     secret: process.env.JWT_SECRET || '',
-    match: [ '/api/users/getUserInfo', '/api/works', '/api/utils/upload' ],
+    match: [ '/api/users/getUserInfo', '/api/works' ],
   };
   config.redis = {
     client: {

@@ -6,26 +6,29 @@ import { parse, join, extname } from 'path';
 import { nanoid } from 'nanoid';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
-import { createSSRApp } from 'vue';
-import { renderToNodeStream } from '@vue/server-renderer';
 import { FileStream } from '../../typings/app';
 
 export default class UtilsController extends Controller {
+  splitIdAndUuid(str = '') {
+    const result = { id: 0, uuid: '' };
+    if (!str) return result;
+    const firstDashIndex = str.indexOf('-');
+    if (firstDashIndex < 0) return result;
+    result.id = parseInt(str.slice(0, firstDashIndex));
+    result.uuid = str.slice(firstDashIndex + 1);
+    return result;
+  }
   // SSR 服务端渲染H5页面
   async renderH5Page() {
     const { ctx } = this;
-    const vueApp = createSSRApp({
-      data: () => ({ msg: 'hello world' }),
-      template: '<h1>{{msg}}</h1>',
-    });
-    // 渲染生成字符串
-    // const appContent = await renderToString(vueApp);
-    // ctx.response.type = 'text/html';
-    // ctx.body = appContent;
-    // 渲染生成文个流
-    const stream = renderToNodeStream(vueApp);
-    ctx.status = 200;
-    await pipeline(stream, ctx.res);
+    const { idAndUuid } = ctx.params;
+    const query = this.splitIdAndUuid(idAndUuid);
+    try {
+      const pageData = await this.service.utils.renderToPageData(query);
+      await ctx.render('page.nj', pageData);
+    } catch (error) {
+      ctx.helper.error({ ctx, errorType: 'h5WorkNotExistError' });
+    }
   }
   // 上传到阿里云oss
   async uploadToOSS() {
