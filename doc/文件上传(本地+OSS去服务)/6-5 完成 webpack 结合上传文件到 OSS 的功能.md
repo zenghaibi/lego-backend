@@ -1,3 +1,6 @@
+##### 1修改webpack.config.js 文件进行环境变量注入：
+
+```javascript
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -16,7 +19,8 @@ module.exports = env => {
     output: {
       path: buildFileDest,
       filename: 'bundle.[hash].js',
-      publicPath: env.production ? 'http://hblego-backend.oss-cn-chengdu.aliyuncs.com/h5-assets/' : '/public',
+      // 三元表达式根据注入环境变量进行判断是生产环境还是开发环境
+      publicPath: env.production ? 'http:hblego-backend.oss-cn-chengdu.aliyuncs.com/h5-assets/' : '/public',
     },
     module: {
       rules: [
@@ -53,3 +57,15 @@ module.exports = env => {
     ],
   };
 };
+```
+
+#### 修改调用脚本：
+
+```json
+  "build:template:dev": "npx webpack --config webpack/webpack.config.js",
+  "build:template:prod": "npx webpack --config webpack/webpack.config.js --env production && npm run upload",
+```
+
+**这样就完成webpack打包静态文件就上传到阿里OSS中**
+
+![1668209686490](image/6-5完成webpack结合上传文件到OSS的功能/1668209686490.png)
