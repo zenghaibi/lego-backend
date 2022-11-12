@@ -2,8 +2,13 @@ import { Controller } from 'egg';
 import { PopulateOptions } from 'mongoose';
 import validateInput from '../decorator/inputValidate';
 import checkPerimssion from '../decorator/checkPermission';
+import { nanoid } from 'nanoid';
 const workCreateRules = {
   title: 'string',
+};
+const channelCreateRules = {
+  name: 'string',
+  workId: 'number',
 };
 /*
 ### 查询列表的可变条件
@@ -24,6 +29,39 @@ export interface IndexCondition {
 }
 
 export default class WorkController extends Controller {
+  // 创建渠道
+  @validateInput(channelCreateRules, 'channelValidateFail')
+  async createChannel() {
+    const { ctx } = this;
+    const { name, workId } = ctx.request.body;
+    const newChannel = {
+      name,
+      id: nanoid(6),
+    };
+    await ctx.model.Work.findOneAndUpdate(
+      { id: workId },
+      { $push: { channels: newChannel } }
+    );
+    ctx.helper.success({ ctx, res: newChannel });
+  }
+  // 获取渠道
+  async getWorkChannel() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const certianWork = await ctx.model.Work.findOne({ id });
+    if (certianWork) {
+      const { channels } = certianWork;
+      ctx.helper.success({
+        ctx,
+        res: {
+          count: (channels && channels.length) || 0,
+          list: channels || [],
+        },
+      });
+    } else {
+      ctx.helper.error({ ctx, errorType: 'channelOperateFail' });
+    }
+  }
   @validateInput(workCreateRules, 'workValidateFail')
   async createWork() {
     const { ctx, service } = this;
@@ -82,7 +120,9 @@ export default class WorkController extends Controller {
   async delete() {
     const { ctx } = this;
     const { id } = ctx.params;
-    const res = await ctx.model.Work.findOneAndDelete({ id }).select('_id id title').lean();
+    const res = await ctx.model.Work.findOneAndDelete({ id })
+      .select('_id id title')
+      .lean();
     ctx.helper.success({ ctx, res });
   }
   // 发布

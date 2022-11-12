@@ -35,4 +35,6 @@ export default (app: Application) => {
 
   router.post('/api/utils/upload', controller.utils.uploadMutipleFiles);
   router.get('/api/pages/:idAndUuid', controller.utils.renderH5Page);
+  router.post('/api/channel', controller.work.createChannel);
+  router.get('/api/channel/getWorkChannels/:id', controller.work.getWorkChannel);
 };

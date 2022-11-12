@@ -2,6 +2,7 @@ import { Application } from 'egg';
 import { ObjectId } from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 
+// 渠道
 interface ChannelProps {
   name: string;
   id: string;
