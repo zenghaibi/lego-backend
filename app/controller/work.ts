@@ -38,11 +38,15 @@ export default class WorkController extends Controller {
       name,
       id: nanoid(6),
     };
-    await ctx.model.Work.findOneAndUpdate(
+    const res = await ctx.model.Work.findOneAndUpdate(
       { id: workId },
       { $push: { channels: newChannel } }
     );
-    ctx.helper.success({ ctx, res: newChannel });
+    if (res) {
+      ctx.helper.success({ ctx, res: newChannel });
+    } else {
+      ctx.helper.error({ ctx, errorType: 'channelOperateFail' });
+    }
   }
   // 获取渠道
   async getWorkChannel() {
@@ -58,6 +62,36 @@ export default class WorkController extends Controller {
           list: channels || [],
         },
       });
+    } else {
+      ctx.helper.error({ ctx, errorType: 'channelOperateFail' });
+    }
+  }
+  // 更新渠道
+  async updateChannelName() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const { name } = ctx.request.body;
+    const res = await ctx.model.Work.findOneAndUpdate(
+      { 'channels.id': id },
+      { $set: { 'channels.$.name': name } }
+    );
+    if (res) {
+      ctx.helper.success({ ctx, res: { name } });
+    } else {
+      ctx.helper.error({ ctx, errorType: 'channelOperateFail' });
+    }
+  }
+  // 删除渠道
+  async deleteChannel() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const work = await ctx.model.Work.findOneAndUpdate(
+      { 'channels.id': id },
+      { $pull: { channels: { id } } },
+      { new: true },
+    );
+    if (work) {
+      ctx.helper.success({ ctx, res: work });
     } else {
       ctx.helper.error({ ctx, errorType: 'channelOperateFail' });
     }
