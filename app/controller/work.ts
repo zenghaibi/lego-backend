@@ -102,6 +102,14 @@ export default class WorkController extends Controller {
     const workData = await service.work.createEmptyWork(ctx.request.body);
     ctx.helper.success({ ctx, res: workData });
   }
+  // 获取个人作品
+  @checkPerimssion('Work', 'workNoPermissonFail')
+  async myWork() {
+    const { ctx } = this
+    const { id } = ctx.params
+    const res = await this.ctx.model.Work.findOne({ id }).lean()
+    ctx.helper.success({ ctx, res })
+  }
   // 查询我作品列表
   async myList() {
     const { ctx } = this;

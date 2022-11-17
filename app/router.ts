@@ -27,6 +27,7 @@ export default (app: Application) => {
 
   router.post('/api/works', controller.work.createWork);
   router.get('/api/works', controller.work.myList);
+  router.get('/api/works/:id', controller.work.myWork)
   router.get('/api/templates', controller.work.templateList);
   router.patch('/api/works/:id', controller.work.update);
   router.delete('/api/works/:id', controller.work.delete);

@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@alicloud/dysmsapi20170525": "^2.0.22",
+    "@casl/ability": "^6.3.2",
     "ali-oss": "^6.17.1",
     "axios": "^1.0.0",
     "busboy": "^0.3.1",
