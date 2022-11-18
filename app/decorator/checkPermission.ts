@@ -12,13 +12,26 @@ const caslMethodMapping: Record<string, string> = {
   PATCH: 'update',
   DELETE: 'delete',
 };
-
-const options = { fieldsFrom: rule => rule.fields || [] }
-
+interface ModelMapping {
+  mongoose: string;
+  casl: string;
+}
+interface IOptions {
+  // 自定义 action
+  action?: string;
+  // 查找记录时候的key, 默认为 id
+  key?: string;
+  // 查找记录时候 value 的来源默认为ctx.params, valueKey 数据来源的键值
+  value?: { type: 'params' | 'body', valueKey: string}
+}
+const fieldsOptions = { fieldsFrom: (rule) => rule.fields || [] };
+// { id: ctx.params.id }
+// { 'channels.id': ctx.params.id }
+// { 'channels.id': ctx.request.body.workID}
 export default function checkPerimssion(
   modelName: string,
   errorType: GlobalErrorTypes,
-  _userKey = 'user'
+  options?: IOptions
 ) {
   return function (_prototype, _key: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
@@ -29,7 +42,8 @@ export default function checkPerimssion(
       const { ctx } = that;
       const { id } = ctx.params;
       const { method } = ctx.request;
-      const action = caslMethodMapping[method];
+      const action =
+        options && options.action ? options?.action : caslMethodMapping[method];
       if (!ctx.state && !ctx.state.user) {
         return ctx.helper.error({ ctx, errorType });
       }
@@ -49,7 +63,12 @@ export default function checkPerimssion(
       }
       // 判断 rule 中是否有对应受限字段
       if (rule && rule.fields) {
-        const fields = permittedFieldsOf(ability, action, modelName, options);
+        const fields = permittedFieldsOf(
+          ability,
+          action,
+          modelName,
+          fieldsOptions
+        );
         if (fields.length > 0) {
           // 1. 过滤 request.body * (不用)
           // 2. 获取当前 payload 的keys 和 允许的 fields 做比较

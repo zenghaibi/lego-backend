@@ -169,7 +169,7 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
   // 发布
-  @checkPerimssion('Work', 'workNoPermissonFail')
+  @checkPerimssion('Work', 'workNoPermissonFail', { action: 'publish'})
   async publish(isTemplate: boolean) {
     const { ctx } = this;
     const url = await ctx.service.work.publish(ctx.params.id, isTemplate);
