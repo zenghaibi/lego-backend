@@ -1,7 +1,7 @@
 import { Controller } from 'egg';
 import { PopulateOptions } from 'mongoose';
 import validateInput from '../decorator/inputValidate';
-import checkPerimssion from '../decorator/checkPermission';
+import checkPermission from '../decorator/checkPermission';
 import { nanoid } from 'nanoid';
 const workCreateRules = {
   title: 'string',
@@ -31,6 +31,11 @@ export interface IndexCondition {
 export default class WorkController extends Controller {
   // 创建渠道
   @validateInput(channelCreateRules, 'channelValidateFail')
+  @checkPermission(
+    { casl: 'Channel', mongoose: 'Work' },
+    'workNoPermissonFail',
+    { value: { type: 'body', valueKey: 'workId' } }
+  )
   async createChannel() {
     const { ctx } = this;
     const { name, workId } = ctx.request.body;
@@ -49,6 +54,7 @@ export default class WorkController extends Controller {
     }
   }
   // 获取渠道
+  @checkPermission({ casl: 'Channel', mongoose: 'Work' }, 'workNoPermissonFail')
   async getWorkChannel() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -67,6 +73,11 @@ export default class WorkController extends Controller {
     }
   }
   // 更新渠道
+  @checkPermission(
+    { casl: 'Channel', mongoose: 'Work' },
+    'workNoPermissonFail',
+    { key: 'channels.id' }
+  )
   async updateChannelName() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -82,13 +93,18 @@ export default class WorkController extends Controller {
     }
   }
   // 删除渠道
+  @checkPermission(
+    { casl: 'Channel', mongoose: 'Work' },
+    'workNoPermissonFail',
+    { key: 'channels.id' }
+  )
   async deleteChannel() {
     const { ctx } = this;
     const { id } = ctx.params;
     const work = await ctx.model.Work.findOneAndUpdate(
       { 'channels.id': id },
       { $pull: { channels: { id } } },
-      { new: true },
+      { new: true }
     );
     if (work) {
       ctx.helper.success({ ctx, res: work });
@@ -96,20 +112,21 @@ export default class WorkController extends Controller {
       ctx.helper.error({ ctx, errorType: 'channelOperateFail' });
     }
   }
+  // 创建作品
   @validateInput(workCreateRules, 'workValidateFail')
-  @checkPerimssion('Work', 'workNoPermissonFail')
+  @checkPermission('Work', 'workNoPermissonFail')
   async createWork() {
     const { ctx, service } = this;
     const workData = await service.work.createEmptyWork(ctx.request.body);
     ctx.helper.success({ ctx, res: workData });
   }
   // 获取个人作品
-  @checkPerimssion('Work', 'workNoPermissonFail')
+  @checkPermission('Work', 'workNoPermissonFail')
   async myWork() {
-    const { ctx } = this
-    const { id } = ctx.params
-    const res = await this.ctx.model.Work.findOne({ id }).lean()
-    ctx.helper.success({ ctx, res })
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const res = await this.ctx.model.Work.findOne({ id }).lean();
+    ctx.helper.success({ ctx, res });
   }
   // 查询我作品列表
   async myList() {
@@ -148,7 +165,7 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
   // 更新作品
-  @checkPerimssion('Work', 'workNoPermissonFail')
+  @checkPermission('Work', 'workNoPermissonFail')
   async update() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -159,7 +176,7 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
   // 删除作品
-  @checkPerimssion('Work', 'workNoPermissonFail')
+  @checkPermission('Work', 'workNoPermissonFail')
   async delete() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -169,7 +186,7 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
   // 发布
-  @checkPerimssion('Work', 'workNoPermissonFail', { action: 'publish'})
+  @checkPermission('Work', 'workNoPermissonFail', { action: 'publish' })
   async publish(isTemplate: boolean) {
     const { ctx } = this;
     const url = await ctx.service.work.publish(ctx.params.id, isTemplate);

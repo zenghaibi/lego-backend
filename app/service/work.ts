@@ -27,6 +27,7 @@ export default class WorkService extends Service {
     };
     return ctx.model.Work.create(newEmptyWork);
   }
+  
   async getList(condition: IndexCondition) {
     const fcondition = { ...defaultIndexCondition, ...condition };
     const { pageIndex, pageSize, select, populate, customSort, find } =
