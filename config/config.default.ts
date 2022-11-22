@@ -17,6 +17,7 @@ export default (appInfo: EggAppInfo) => {
     csrf: {
       enable: false,
     },
+    domainWhiteList: ['http://localhost:8080']
   };
   // 配置debug调试等级
   config.logger = {
@@ -65,10 +66,10 @@ export default (appInfo: EggAppInfo) => {
       { prefix: '/uploads', dir: join(appInfo.baseDir, 'uploads') },
     ],
   };
-  config.cors = {
-    origin: 'http://localhost:8080',
-    allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
-  };
+  // config.cors = {
+  //   origin: 'http://localhost:8080',
+  //   allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
+  // };
   // 阿里云对象存储
   config.oss = {
     client: {
@@ -100,6 +101,8 @@ export default (appInfo: EggAppInfo) => {
     },
     giteeOauthConfig,
     H5BaseURL: 'http://localhost:7001/api/pages',
+    // 开发环境的失效时间为1个小时
+    jwtExpires: '1h',
     // baseUrl: 'default.url',
     // jwt: {
     //   secret: '1234567890',
