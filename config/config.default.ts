@@ -31,8 +31,9 @@ export default (appInfo: EggAppInfo) => {
   config.mongoose = {
     url: 'mongodb://localhost:27017/lego',
     options: {
-      user: 'kevin',
+      user: 'root',
       pass: '123456',
+      authSource: 'admin',
       useCreateIndex: true,
       useUnifiedTopology: true,
     },
