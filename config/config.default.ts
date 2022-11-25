@@ -46,14 +46,14 @@ export default (appInfo: EggAppInfo) => {
     secret: process.env.JWT_SECRET || '',
     match: [ '/api/users/getUserInfo', '/api/works', '/api/channel' ],
   };
-  config.redis = {
-    client: {
-      port: 6379,
-      host: '127.0.0.1',
-      password: '',
-      db: 0,
-    },
-  };
+  // config.redis = {
+  //   client: {
+  //     port: 6379,
+  //     host: '127.0.0.1',
+  //     password: '',
+  //     db: 0,
+  //   },
+  // };
   config.multipart = {
     // mode: 'file',
     // tmpdir: join(appInfo.baseDir, 'uploads'),

@@ -14,6 +14,13 @@ export default () => {
   //     }
   //   }
   // }
+  config.mongoose = {
+    url: 'mongodb://mongo:27017/lego',
+    options: {
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    },
+  };
   // config.redis = {
   //   client: {
   //     port: 6379,
