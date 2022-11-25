@@ -6,7 +6,12 @@ coverage/
 run/
 logs/
 .DS_Store
-.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 *.swp
 *.lock
 !.autod.conf.js
@@ -19,5 +24,6 @@ test/**/*.map
 config/**/*.map
 
 .env
-log.txt
-dump.rdb
+uploads/
+app/public
+.docker-volumes/
