@@ -23,7 +23,6 @@ app/**/*.map
 test/**/*.map
 config/**/*.map
 
-.env
 uploads/
 app/public
 .docker-volumes/
