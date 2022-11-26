@@ -8,16 +8,17 @@ services:
       - '$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/'
     ports:
       - 27017:27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=pass
-  # lego-backend:
-    # depends_on:
-    #   - lego-mongo
-    # build:
-    #   context: . # 当前目录
-    #   dockerfile: Dockerfile # 基于 Dockerfile 构建
-    # image: lego-backend
-    # container_name: lego-backend
-    # ports:
-    #  - 7001:7001
+    env_file:
+      - .env
+  lego-backend:
+    depends_on:
+      - lego-mongo
+    build:
+      context: . # 当前目录
+      dockerfile: Dockerfile # 基于 Dockerfile 构建
+    image: lego-backend
+    container_name: lego-backend
+    ports:
+     - 7001:7001
+    env_file:
+      - .env

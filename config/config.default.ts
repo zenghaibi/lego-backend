@@ -28,16 +28,16 @@ export default (appInfo: EggAppInfo) => {
     defaultViewEngine: 'nunjucks',
   };
   // 配置自定义插件
-  config.mongoose = {
-    url: 'mongodb://localhost:27017/lego',
-    options: {
-      user: 'root',
-      pass: '123456',
-      authSource: 'admin',
-      useCreateIndex: true,
-      useUnifiedTopology: true,
-    },
-  };
+  // config.mongoose = {
+  //   url: 'mongodb://localhost:27017/lego',
+  //   options: {
+  //     user: 'root',
+  //     pass: '123456',
+  //     authSource: 'admin',
+  //     useCreateIndex: true,
+  //     useUnifiedTopology: true,
+  //   },
+  // };
   config.bcrypt = {
     saltRounds: 10,
   };
