@@ -6,7 +6,7 @@ export default (app: Application) => {
   // const jwt = app.middleware.jwt({
   //   secret: app.config.jwt.secret,
   // });
-  router.get('/', controller.home.index);
+  router.get('/ping', controller.home.index);
   router.prefix('/api');
   router.post('/users/create', controller.user.createByEmail);
   // 这里使用egg-jwt 插件 (app.jwt 这里没有定义类文件所以直接断言成 any)

@@ -23,14 +23,14 @@ export default () => {
       useUnifiedTopology: true,
     }
   };
-  // config.redis = {
-  //   client: {
-  //     port: 6379,
-  //     host: '127.0.0.1',
-  //     password: 'pass',
-  //     db: 0
-  //   }
-  // }
+  config.redis = {
+    client: {
+      port: 6379,
+      host: 'lego-redis',
+      password: process.env.REDIS_PASSWORD,
+      db: 0
+    }
+  }
 
   // 2 配置 cors 允许的域名
   config.security = {
