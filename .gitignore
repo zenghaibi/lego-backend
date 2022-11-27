@@ -26,3 +26,4 @@ config/**/*.map
 uploads/
 app/public
 .docker-volumes/
+dump.rdb
