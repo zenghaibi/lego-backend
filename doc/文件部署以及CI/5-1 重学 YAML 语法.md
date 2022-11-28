@@ -25,6 +25,7 @@ mutiple_string: |
 ```
 
 ##### 示例代码：
+
 ```
 # doucment start
 # scalars 纯量，不能再分割的量
@@ -58,4 +59,11 @@ hobbies:
 ```
 
 ##### 在线检测试工具
+
 http: yamlchecker.com
+
+docker rmi -f $(docker images -qa) 清理所有镜像
+
+docker stop $(docker ps -a) & docker rm (docker ps -aq)
+
+docker system prune --volumes
