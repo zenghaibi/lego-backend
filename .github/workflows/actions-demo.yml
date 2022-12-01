@@ -15,4 +15,4 @@ jobs:
           node-versoin: '16'
       - run: node -v
       - run: npm install -g typescript
-      - run tsx -v
+      - run tsc -v
