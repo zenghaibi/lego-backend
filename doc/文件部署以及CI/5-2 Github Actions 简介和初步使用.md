@@ -25,6 +25,30 @@ Event是触发workflow的特殊事件，比如pull request. push或issue，也�
 https://docs.github.com/cn/actions/learn-github-actions/events-that-trigger-workflows
 
 **Jobs**
+Job是Workflow当中一系列的可执行步骤，每个Job是在同一个runner中进行的（Runner指处于github
+的一台特殊的虚拟机，支持种操作），每个步骤或者是一个shell脚本，抑或是一个可执行的action,每个
+步骤是按顺序执行，并且互相依赖。
+
+![Workflow overview](https://docs.github.com/assets/cb-25535/images/help/images/overview-actions-simple.png)
+
+##### github-action-demo示列代码：
+
+```yml
+name: Github Actions Demo
+on: [push]
+jobs:
+  Check-Github-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "triggered by ${{ github.event_name }} event"
+      - run: echo "running on a ${{ runner.os }} server hosted by Github"
+      - name: check out repo code
+        uses: actions/checkout@v2
+      - run: echo "the ${{ github.resository }} has been cloned"
+      - name: List files in the repo
+        run: |
+          ls ${{ github.workspace }}
+```
 
 ***处理一下，将仓库地址改github***
 
