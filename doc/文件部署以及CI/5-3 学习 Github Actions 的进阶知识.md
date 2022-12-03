@@ -5,7 +5,7 @@ name: More Actions Demo
 on: [push]
 jobs:
   build:
-    runs-on: unbunt-laest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
