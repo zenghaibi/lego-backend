@@ -27,3 +27,4 @@ uploads/
 app/public
 .docker-volumes/
 dump.rdb
+.env
