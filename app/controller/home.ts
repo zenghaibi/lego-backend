@@ -14,7 +14,6 @@ export default class HomeController extends Controller {
         dbVersion: version,
         redisStatus: status,
         appVersion,
-        env: process.env.PING_ENV,
         hello: 'world'
       },
     });
