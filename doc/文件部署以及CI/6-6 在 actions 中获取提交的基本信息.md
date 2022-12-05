@@ -13,3 +13,5 @@
 * 在push tags的时候才触发对应的job
 * https://docs.github.com/cn/actions/learn-github-actions/events-that-trigger-workflows
 * 怎样获取对应的每次提交的特殊信息
+
+![1670187944981](image/6-6在actions中获取提交的基本信息/1670187944981.png)
