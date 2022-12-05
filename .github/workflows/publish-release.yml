@@ -55,6 +55,7 @@ jobs:
           mkdir lego-backend
           cp .env docker-compose-online.yml lego-backend
           cp -r mongo-entrypoint lego-backend
+          cat .env
           ls -a lego-backend
       # 8 通过 scp 拷贝必须文件到服务器
       - name: 'copy lego-backend folder via ssh'
@@ -80,6 +81,5 @@ jobs:
           script: |
             docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-chengdu.aliyuncs.com
             cd ~/lego-backend
-            docker-compose -f docker-compose-online.yml down
             docker-compose -f docker-compose-online.yml up -d
             docker logout registry.cn-chengdu.aliyuncs.com
