@@ -26,17 +26,6 @@ jobs:
           echo MONGO_DB_USERNAME=${{ secrets.MONGO_DB_USERNAME }} >> .env
           echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }} >> .env
           echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> .env
-          touch sea.txt
-          echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY }} >> sea.txt
-          echo ALC_SECRET_KEY=${{ secrets.ALC_SECRET_KEY }} >> sea.txt
-          echo GITEE_CID=${{ secrets.GITEE_CID }} >> sea.txt
-          echo GITEE_SECRET=${{ secrets.GITEE_SECRET }} >> sea.txt
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> sea.txt
-          echo MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGO_INITDB_ROOT_USERNAME }} >> sea.txt
-          echo MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGO_INITDB_ROOT_PASSWORD }} >> sea.txt
-          echo MONGO_DB_USERNAME=${{ secrets.MONGO_DB_USERNAME }} >> sea.txt
-          echo MONGO_DB_PASSWORD=${{ secrets.MONGO_DB_PASSWORD }} >> sea.txt
-          echo REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }} >> sea.txt
 
       # 使用阿里云ACR 完成 docker login 
       - name: Login to Aliyun Container Registry (ACR)
@@ -64,7 +53,7 @@ jobs:
       - name: 'copy necessary files in to one folder'
         run: |
           mkdir lego-backend 
-          cp .env docker-compose-online.yml sea.txt lego-backend
+          cp .env docker-compose-online.yml lego-backend
           cp -r mongo-entrypoint lego-backend
           ls -a lego-backend
       # 通过 scp 拷贝必须文件到服务器
