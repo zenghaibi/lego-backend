@@ -34,7 +34,7 @@ export default () => {
 
   // 2 配置 cors 允许的域名
   config.security = {
-    domainWhiteList: ['https://imooc-lego.com','https://www.imooc-lego.com']
+    domainWhiteList: ['http://localhost:8080','https://imooc-lego.com','https://www.imooc-lego.com']
   }
   // 3 配置生产token的失效时间为 2 天
   config.jwtExpires = '2 days';

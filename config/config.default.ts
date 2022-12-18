@@ -28,16 +28,16 @@ export default (appInfo: EggAppInfo) => {
     defaultViewEngine: 'nunjucks',
   };
   // 配置自定义插件
-  // config.mongoose = {
-  //   url: 'mongodb://localhost:27017/lego',
-  //   options: {
-  //     user: 'root',
-  //     pass: '123456',
-  //     authSource: 'admin',
-  //     useCreateIndex: true,
-  //     useUnifiedTopology: true,
-  //   },
-  // };
+  config.mongoose = {
+    url: 'mongodb://localhost:27017/lego',
+    options: {
+      user: 'root',
+      pass: '123456',
+      authSource: 'admin',
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    },
+  };
   config.bcrypt = {
     saltRounds: 10,
   };
@@ -61,7 +61,7 @@ export default (appInfo: EggAppInfo) => {
     // mode: 'file',
     // tmpdir: join(appInfo.baseDir, 'uploads'),
     whitelist: [ '.png', '.jpg', '.gif', '.webp' ],
-    fileSize: '100kb',
+    fileSize: '10240kb',
   };
   config.static = {
     dir: [

@@ -35,7 +35,7 @@ export default (app: Application) => {
   router.post('/works/publish/:id', controller.work.publishWork);
   router.post('/works/publish-template/:id', controller.work.publishTemplate);
 
-  router.post('/utils/upload', controller.utils.uploadMutipleFiles);
+  router.post('/utils/upload', controller.utils.uploadToOSS);
   router.get('/pages/:idAndUuid', controller.utils.renderH5Page);
   router.post('/channel', controller.work.createChannel);
   router.get('/channel/getWorkChannels/:id', controller.work.getWorkChannel);
