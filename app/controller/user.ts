@@ -57,12 +57,12 @@ export default class UserController extends Controller {
     // 发送短信
     // 判断是否为生产环境
     if (app.config.env === 'prod') {
-      // 调用啊里云短信服务发送验码
-      const resp = await this.service.user.sendSMS(cellphone, veriCode);
+      // 调用啊里云短信服务发送验码(注掉是为省短息费用) 正式发布记得改回来
+      // const resp = await this.service.user.sendSMS(cellphone, veriCode);
 
-      if (resp.body.code !== 'OK') {
-        return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
-      }
+      // if (resp.body.code !== 'OK') {
+      //   return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
+      // }
     }
     console.log(app.config.aliCloudConfig);
     // 模拟发送手机验码60秒内有效
@@ -70,7 +70,7 @@ export default class UserController extends Controller {
     ctx.helper.success({
       ctx,
       msg: '验证码发送成功',
-      res: app.config.env === 'local' ? { veriCode } : null,
+      res: app.config.env === 'local' ? { veriCode } : { veriCode }, // 正式发布记得改回来
     });
   }
   @validateInput(userCreateRules, 'userValidateFail')
