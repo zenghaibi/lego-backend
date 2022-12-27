@@ -60,12 +60,6 @@ db.works.insertMany([
     isPublic: true,
     createdAt: '2020-11-03T09:51:48.000Z',
     updatedAt: '2022-09-22T10:28:42.000Z',
-    user: {
-      userName: '136****5632',
-      nickName: 'Viking3',
-      gender: 0,
-      picture: 'http://imooc-lego-resource-dev.oss-cn-hangzhou.aliyuncs.com/logo-915499.png'
-    }
   }
 ])
 EOF
