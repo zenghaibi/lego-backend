@@ -138,9 +138,11 @@ export default class WorkController extends Controller {
       ...(title && { title: { $regex: title, $options: 'i' } }),
       ...(isTemplate && { isTemplate: !!parseInt(isTemplate) }),
     };
+
     const listCondition: IndexCondition = {
-      select: 'id author copiedCount coverImag desc title user isHot createAt',
-      populate: { path: 'user', select: 'username nickName picture' },
+      select:
+        'id uuid title desc contentId publishContentId author coverImg isTemplate status copiedCount latestPublishAt isHot isNew orderIndex isPublic createdAt updatedAt',
+      populate: { path: 'user', select: 'username nickName gender picture' },
       find: findConditon,
       ...(pageIndex && { pageIndex: parseInt(pageIndex) }),
       ...(pageSize && { pageSize: parseInt(pageSize) }),
@@ -154,8 +156,8 @@ export default class WorkController extends Controller {
     const { ctx } = this;
     const { pageIndex, pageSize } = ctx.query;
     const listCondition: IndexCondition = {
-      select: 'id author copiedCount coverImag desc title user isHot createAt',
-      populate: { path: 'user', select: 'username nickName picture' },
+      select: 'id uuid title desc contentId publishContentId author coverImg isTemplate status copiedCount latestPublishAt isHot isNew orderIndex isPublic createdAt updatedAt',
+      populate: { path: 'user', select: 'username nickName gender picture' },
       find: { isPublic: true, isTemplate: true },
       ...(pageIndex && { pageIndex: parseInt(pageIndex) }),
       ...(pageSize && { pageSize: parseInt(pageSize) }),

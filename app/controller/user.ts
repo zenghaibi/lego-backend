@@ -37,10 +37,10 @@ export default class UserController extends Controller {
   @validateInput(sendCodeRules, 'userValidateFail')
   async sendVeriCode() {
     const { ctx, app } = this;
-    const { cellphone } = ctx.request.body;
+    const { phoneNumber } = ctx.request.body;
     // 获取 redis 的数据
     // phoneVeriCode-18080220865
-    const preVeriCode = await app.redis.get(`phoneVeriCode-${cellphone}`);
+    const preVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`);
     console.log(preVeriCode);
     // 判断是否存在
     if (preVeriCode) {
@@ -66,7 +66,7 @@ export default class UserController extends Controller {
     }
     console.log(app.config.aliCloudConfig);
     // 模拟发送手机验码60秒内有效
-    await app.redis.set(`phoneVeriCode-${cellphone}`, veriCode, 'ex', 60);
+    await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
     ctx.helper.success({
       ctx,
       msg: '验证码发送成功',
