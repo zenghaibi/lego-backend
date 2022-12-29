@@ -155,7 +155,6 @@ db.works.insertMany([
     user: {
       username: '18080220865',
       nickName: '乐高0865'
-      }
     }
   } 
 ])
