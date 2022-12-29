@@ -1,28 +1,28 @@
 import { Controller } from 'egg';
-import validateInput from '../decorator/inputValidate';
-const userCreateRules = {
-  username: 'email',
-  password: { type: 'password', min: 8 },
-};
+// import validateInput from '../decorator/inputValidate';
+// const userCreateRules = {
+//   username: 'email',
+//   password: { type: 'password', min: 8 },
+// };
 // 手机号输入验证规则
-const sendCodeRules = {
-  phoneNumber: {
-    type: 'string',
-    format: /^1[3-9]\d{9}$/,
-    message: '手机号码格式错误',
-  },
-};
-const userPhoneCreateRules = {
-  phoneNumber: {
-    type: 'string',
-    format: /^1[3-9]\d{9}$/,
-    message: '手机号码格式错误',
-  },
-  veriCode: { type: 'string', format: /^\d{4}$/, message: '验证码格式错误' },
-};
+// const sendCodeRules = {
+//   phoneNumber: {
+//     type: 'string',
+//     format: /^1[3-9]\d{9}$/,
+//     message: '手机号码格式错误',
+//   },
+// };
+// const userPhoneCreateRules = {
+//   phoneNumber: {
+//     type: 'string',
+//     format: /^1[3-9]\d{9}$/,
+//     message: '手机号码格式错误',
+//   },
+//   veriCode: { type: 'string', format: /^\d{4}$/, message: '验证码格式错误' },
+// };
 
 export default class UserController extends Controller {
-  @validateInput(userCreateRules, 'userValidateFail')
+  // @validateInput(userCreateRules, 'userValidateFail')
   async createByEmail() {
     const { ctx, service } = this;
     const { username } = ctx.request.body;
@@ -34,7 +34,7 @@ export default class UserController extends Controller {
     ctx.helper.success({ ctx, res: userData });
   }
   // 发送手机验证吗
-  @validateInput(sendCodeRules, 'userValidateFail')
+  // @validateInput(sendCodeRules, 'userValidateFail')
   async sendVeriCode() {
     const { ctx, app } = this;
     const { phoneNumber } = ctx.request.body;
@@ -69,11 +69,11 @@ export default class UserController extends Controller {
     await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
     ctx.helper.success({
       ctx,
-      msg: '验证码发送成功',
+      msg: '后端发送的验证码发送成功',
       res: app.config.env === 'local' ? { veriCode } : { veriCode }, // 正式发布记得改回来
     });
   }
-  @validateInput(userCreateRules, 'userValidateFail')
+  // @validateInput(userCreateRules, 'userValidateFail')
   async loginByEmail() {
     const { ctx, service, app } = this;
     // 根据 username 取得用户信息
@@ -99,7 +99,7 @@ export default class UserController extends Controller {
     ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }
   // 手机登录
-  @validateInput(userPhoneCreateRules, 'userValidateFail')
+  // @validateInput(userPhoneCreateRules, 'userValidateFail')
   async loginByCellphone() {
     const { ctx, app } = this;
     const { phoneNumber, veriCode } = ctx.request.body;
