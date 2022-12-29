@@ -6,7 +6,7 @@ const userCreateRules = {
 };
 // 手机号输入验证规则
 const sendCodeRules = {
-  cellphone: {
+  phoneNumber: {
     type: 'string',
     format: /^1[3-9]\d{9}$/,
     message: '手机号码格式错误',
