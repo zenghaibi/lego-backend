@@ -55,6 +55,6 @@ export default class WorkService extends Service {
       new: true,
     });
     const uuid = res?.uuid;
-    return `${H5BaseURL}/pages/${id}-${uuid}`;
+    return `${H5BaseURL}/api/pages/${id}-${uuid}`;
   }
 }
