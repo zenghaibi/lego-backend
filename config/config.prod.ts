@@ -42,6 +42,6 @@ export default () => {
   config.giteeOauthConfig = { 
     redirectURL: 'http://api.imooc-lego.com/api/users/passport/gitee/callback'
   }
-  config.H5BaseURL = 'https://h5.imooc-lego.com';
+  config.H5BaseURL = 'http://114.116.94.125:7002';
   return config;
 };
