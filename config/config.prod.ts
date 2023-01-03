@@ -34,6 +34,9 @@ export default () => {
 
   // 2 配置 cors 允许的域名
   config.security = {
+    xframe: {
+      enable: false,
+    },
     domainWhiteList: ['https://imooc-lego.com','https://www.imooc-lego.com','http://localhost:8080','http://114.116.94.125']
   }
   // 3 配置生产token的失效时间为 2 天
