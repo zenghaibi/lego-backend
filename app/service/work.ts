@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 import { WorkProps } from '../model/work';
 import { IndexCondition } from '../controller/work';
 const defaultIndexCondition: Required<IndexCondition> = {
-  pageIndex: 1,
+  pageIndex: 0,
   pageSize: 10,
   select: '',
   populate: [ '' ],
@@ -32,7 +32,7 @@ export default class WorkService extends Service {
     const fcondition = { ...defaultIndexCondition, ...condition };
     const { pageIndex, pageSize, select, populate, customSort, find } =
       fcondition;
-    const skip = (pageIndex - 1) * pageSize;
+    const skip = pageIndex * pageSize;
     const res = await this.ctx.model.Work.find(find)
       .select(select)
       .populate(populate)

@@ -14,7 +14,7 @@ export default class HomeController extends Controller {
         dbVersion: version,
         redisStatus: status,
         appVersion,
-        hello: '完成自动部署以及回滚的功能，更新到1.0.4'
+        hello: `自动部署，更新到${appVersion}`
       },
     });
   }
