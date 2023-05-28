@@ -37,13 +37,7 @@ export default () => {
     xframe: {
       enable: false,
     },
-    domainWhiteList: [
-      'https://imooc-lego.com',
-      'https://www.imooc-lego.com',
-      'http://localhost:8080',
-      'http://114.116.94.125',
-      'http://114.116.100.160'
-    ]
+    domainWhiteList: ['*']
   }
   // 3 配置生产token的失效时间为 2 天
   config.jwtExpires = '2 days';
