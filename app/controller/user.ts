@@ -6,7 +6,7 @@ const userCreateRules = {
 };
 // 手机号输入验证规则
 const sendCodeRules = {
-  cellphone: {
+  phoneNumber: {
     type: 'string',
     format: /^1[3-9]\d{9}$/,
     message: '手机号码格式错误',
@@ -37,10 +37,10 @@ export default class UserController extends Controller {
   @validateInput(sendCodeRules, 'userValidateFail')
   async sendVeriCode() {
     const { ctx, app } = this;
-    const { cellphone } = ctx.request.body;
+    const { phoneNumber } = ctx.request.body;
     // 获取 redis 的数据
     // phoneVeriCode-18080220865
-    const preVeriCode = await app.redis.get(`phoneVeriCode-${cellphone}`);
+    const preVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`);
     console.log(preVeriCode);
     // 判断是否存在
     if (preVeriCode) {
@@ -57,20 +57,20 @@ export default class UserController extends Controller {
     // 发送短信
     // 判断是否为生产环境
     if (app.config.env === 'prod') {
-      // 调用啊里云短信服务发送验码
-      const resp = await this.service.user.sendSMS(cellphone, veriCode);
+      // 调用啊里云短信服务发送验码(注掉是为省短息费用) 正式发布记得改回来
+      // const resp = await this.service.user.sendSMS(cellphone, veriCode);
 
-      if (resp.body.code !== 'OK') {
-        return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
-      }
+      // if (resp.body.code !== 'OK') {
+      //   return ctx.helper.error({ ctx, errorType: 'sendVeriCodeError' });
+      // }
     }
     console.log(app.config.aliCloudConfig);
     // 模拟发送手机验码60秒内有效
-    await app.redis.set(`phoneVeriCode-${cellphone}`, veriCode, 'ex', 60);
+    await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
     ctx.helper.success({
       ctx,
-      msg: '验证码发送成功',
-      res: app.config.env === 'local' ? { veriCode } : null,
+      msg: '后端发送的验证码发送成功',
+      res: app.config.env === 'local' ? { veriCode } : { veriCode }, // 正式发布记得改回来
     });
   }
   @validateInput(userCreateRules, 'userValidateFail')
@@ -89,6 +89,7 @@ export default class UserController extends Controller {
     if (!verifyPwd) {
       return ctx.helper.error({ ctx, errorType: 'loginCheckFailInfo' });
     }
+    const id = user.id
     const token = app.jwt.sign(
       { username: user.username, _id: user._id },
       app.config.jwt.secret,
@@ -96,7 +97,7 @@ export default class UserController extends Controller {
         expiresIn: 60 * 60,
       },
     );
-    ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
+    ctx.helper.success({ ctx, res: { id, token }, msg: '登录成功' });
   }
   // 手机登录
   @validateInput(userPhoneCreateRules, 'userValidateFail')
