@@ -10,6 +10,7 @@ interface GiteeUserResp {
   email: string;
 }
 
+// const mssql = require('mssql');
 export default class UserService extends Service {
   public async createByEmail(playload: UserProps) {
     const { ctx } = this;
@@ -147,4 +148,20 @@ export default class UserService extends Service {
     );
     return token;
   }
+
+  //测试mssql
+  async getMsSql() {
+        // use db1
+        console.log('111111------------');
+        // const request = new mssql.Request((await mssql.get('client')));
+        // const rows = await request.query('SELECT name FROM sysobjects where xtype = \'U\';');
+    
+        // use db2
+        // const request1 = new mssql.Request((await this.app.mssql.get('db2')));
+        // const rows1 = await request1.query('SELECT name FROM sysobjects where xtype = \'U\';');
+        //console.log(rows);
+    
+        return '6';
+  }
+
 }

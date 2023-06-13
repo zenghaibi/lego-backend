@@ -99,6 +99,137 @@ export default class UserController extends Controller {
     );
     ctx.helper.success({ ctx, res: { id, token }, msg: '登录成功' });
   }
+  // 获取用户例表
+  async userList() {
+    const { ctx } = this;
+    // const { pageIndex, pageSize } = ctx.query;
+    // const listCondition: IndexCondition = {
+    //   select: 'id uuid title desc contentId publishContentId author coverImg isTemplate status copiedCount latestPublishAt isHot isNew orderIndex isPublic createdAt updatedAt',
+    //   populate: { path: 'user', select: 'username nickName gender picture' },
+    //   find: { isPublic: true, isTemplate: true },
+    //   ...(pageIndex && { pageIndex: parseInt(pageIndex) }),
+    //   ...(pageSize && { pageSize: parseInt(pageSize) }),
+    // };
+
+    // const res = await ctx.service.work.getList(listCondition);
+    // 先用模拟数据进行测试完成前端功能
+    const test = [
+      {
+        "type" : "email",
+        "username" : "289797421@qq.com",
+        "email" : "289797421@qq.com",
+        "nickName" : "sea",
+        "createdAt" : "2022-10-20T15:08:57.487Z",
+        "updatedAt" : "2022-10-20T15:08:57.487Z",
+        "id" : 1,
+      },
+      {
+        "type" : "cellphone",
+        "username" : "18080220865",
+        "phoneNumber" : "18080220865",
+        "nickName" : "HB0865",
+        "createdAt" : "2022-10-20T15:09:51.007Z",
+        "updatedAt" : "2022-10-20T15:09:51.007Z",
+        "id" : 2
+      },
+      {
+        "type" : "oauth",
+        "oauthID" : "1968524",
+        "provider" : "gitee",
+        "username" : "Gitee1968524",
+        "picture" : "https://gitee.com/assets/no_portrait.png",
+        "nickName" : "Admin",
+        "email" : null,
+        "createdAt" : "2022-10-20T15:12:22.787Z",
+        "updatedAt" : "2022-10-20T15:12:22.787Z",
+        "id" : 3
+      },
+      {
+        "type" : "email",
+        "username" : "linuxangel@126.com",
+        "email" : "linuxangel@126.com",
+        "nickName" : "linuxangel",
+        "createdAt" : "2022-10-21T05:02:56.832Z",
+        "updatedAt" : "2022-10-21T05:02:56.832Z",
+        "id" : 4
+      },
+      {
+        "type" : "email",
+        "role" : "normal",
+        "username" : "33278908@qq.com",
+        "email" : "33278908@qq.com",
+        "nickName" : "lin",
+        "createdAt" : "2023-06-07T09:41:26.490Z",
+        "updatedAt" : "2023-06-07T09:41:26.490Z",
+        "id" : 5,
+      },
+      {
+        "type" : "email",
+        "role" : "normal",
+        "username" : "4954962@qq.com",
+        "email" : "4954962@qq.com",
+        "nickName" : "姚杰",
+        "createdAt" : "2023-06-07T09:44:49.667Z",
+        "updatedAt" : "2023-06-07T09:44:49.667Z",
+        "id" : 6
+      },
+      {
+        "type" : "email",
+        "role" : "normal",
+        "username" : "2427041225@qq.com",
+        "email" : "2427041225@qq.com",
+        "nickName" : "黄老师",
+        "createdAt" : "2023-06-07T09:46:37.406Z",
+        "updatedAt" : "2023-06-07T09:46:37.406Z",
+        "id" : 7
+      },
+      {
+        "type" : "email",
+        "role" : "normal",
+        "username" : "3395044775@qq.com",
+        "email" : "3395044775@qq.com",
+        "nickName" : "缺缺",
+        "createdAt" : "2023-06-07T09:48:26.107Z",
+        "updatedAt" : "2023-06-07T09:48:26.107Z",
+        "id" : 8
+      },
+      {
+        "type" : "cellphone",
+        "role" : "normal",
+        "username" : "18990583885",
+        "phoneNumber" : "18990583885",
+        "nickName" : "HB3885",
+        "createdAt" : "2023-06-07T09:54:02.336Z",
+        "updatedAt" : "2023-06-07T09:54:02.336Z",
+        "id" : 9
+      },
+      {
+        "type" : "email",
+        "role" : "normal",
+        "username" : "361236987@qq.com",
+        "email" : "361236987@qq.com",
+        "nickName" : "康讯",
+        "createdAt" : "2023-06-07T09:58:15.429Z",
+        "updatedAt" : "2023-06-07T09:58:15.429Z",
+        "id" : 10
+      },
+      {
+        "type" : "email",
+        "role" : "normal",
+        "username" : "17562828@qq.com",
+        "email" : "17562828@qq.com",
+        "nickName" : "张军",
+        "createdAt" : "2023-06-07T10:00:56.225Z",
+        "updatedAt" : "2023-06-07T10:00:56.225Z",
+        "id" : 11
+      }
+    ];
+    const res = {
+      list: test,
+      count: 11
+    }
+    ctx.helper.success({ ctx, res });
+  }
   // 手机登录
   @validateInput(userPhoneCreateRules, 'userValidateFail')
   async loginByCellphone() {

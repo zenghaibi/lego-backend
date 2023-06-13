@@ -37,7 +37,6 @@ const plugin: EggPlugin = {
   oss: {
     enable: true,
     package: 'egg-oss',
-  },
+  }
 };
-
 export default plugin;
